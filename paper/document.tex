@@ -118,6 +118,10 @@ verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten kann:
     verlorenen oder verzögerten Netzwerkpakete.
 \end{description}
 
+Zu beachten ist hier, dass nicht explizit zwei Garantien gewählt werden müssen
+- gewählt werden muss zwischen Konsistenz und Verfügbarkeit, wenn tatsächlich
+ein Netwerkfehler auftritt.
+
 Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
 
 % TODO Graphik vom CAP-Theorem
@@ -143,9 +147,18 @@ dauern, dass heißt es gibt keine aktuelle Sicht auf die Daten.
 
 Das Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
 verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
-Realtime Layer und dieser füllt so die entstehende Lücke auf.
+Realtime Layer und dieser füllt so die entstehende Lücke auf. Kombiniert werden
+die beiden Sichten auf die Daten vom \textit{Serving Layer}.
 
 \subsection{Batch Layer}
+Der Batch-Layer geht davon aus, dass es ok ist, wenn es keine aktuelle Sicht
+auf die Daten gibt und die Berechnungen dadurch entsprechend einfach werden.
+Das heißt der Batch Job läuft, führt seine Berechnungen aus und schreibt das
+Ergebnis in eine Datenbank. Dabei werden schon in der Datenbank bestehende
+Daten vollständig ersetzt. Im Anschluss wird die Neuberechnung angestartet, die
+die in der Zwischenzeit angefallenen Daten mitbetrachtet. Ist diese
+abgeschlossen ersetzt das Ergebnis wieder das vorherige usw.
+
 \subsection{Speed / Realtime Layer}
 
 \section{Hadoop Kernkomponenten}
