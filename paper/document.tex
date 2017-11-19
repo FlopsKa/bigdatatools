@@ -62,7 +62,45 @@ Möglichkeiten der Verarbeitung von Streams.
 
 % TODO Kapitelbeschreibung
 
-\section{Big Data}
+\section{Datenhaltung bei Big Data}
+Die Verarbeitung von den in der Einleitung beschriebenen Datenmengen bringt
+eine Menge an Herausforderungen mit sich: Ein einzelner Rechner ist zu schwach,
+um die Menge an Daten a) abzuspeichern und b) Berechnungen auf diesen Daten
+auszuführen. Aus diesem Grund wird für die Verarbeitung von Big Data im
+Normalfall \textit{horizontal} skaliert. Das bedeutet, dass die Verarbeitung
+statt auf einem extrem performanten Rechner auf viele Rechner verteilt wird.
+Hier kommt sogenannte \textit{Commodity Hardware} zum Einsatz: Handelsübliche
+Rechner, die im Verbund agieren und auf die anfallende Arbeit aufgeteilt wird.
+
+Reduziert man Big Data auf die zu speichernde Datenmenge gibt es drei
+Hauptgründe, die Last auf verschiedene Rechner zu verteilen:
+
+\begin{description}
+  \item[Skalierbarkeit] Die Daten können aufgrund des Speicherplatzes, der
+    Schreibgeschwindigkeit oder der Lesegeschwindigkeit nicht auf einem
+    einzelnen Rechner gespeichert werden.
+  \item[Fehlertoleranz / Ausfallsicherheit] Das System soll nicht von einer
+    einzelnen Maschine abhängig sein. Fällt ein Rechner aus, kann ein anderer
+    die Arbeit übernehmen. Je mehr Rechner an einem System beteiligt sind,
+    desto wahrscheinlicher ist es, dass einzelne Rechner oder einzelne
+    Komponenten ausfallen.
+  \item[Latenz] Sind die Daten auf einem Rechner, der sich geographisch nah am
+    Ort des Zugriffs befindet, so müssen Netwerkpakete eine geringere Strecke
+    zurücklegen und der Zugriff wird beschleunigt.
+\end{description}
+
+Um Daten verteilt vorzuhalten, gibt es zwei Ansätze:
+
+\begin{description}
+  \item[Replikation] Die gleichen Daten werden auf verschiedenen Knoten
+    vorgehalten, sind also redundant gespeichert. Fällt ein Knoten aus, so
+    können die Daten von einem anderen Knoten gelesen werden.
+  \item[Partitionierung] Eine große Datenbank wird in Teilmengen zerlegt, die
+    dann verschiedenen Knoten zugewiesen werden.
+\end{description}
+
+Die beiden Ansätze werden in der Praxis häufig kombiniert eingesetzt.
+
 \section{CAP-Theorem}
 \section{Lambda Architektur}
 \subsection{Batch Layer}
