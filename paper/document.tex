@@ -1,6 +1,7 @@
 \documentclass[a4paper,11pt]{scrartcl}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{amsmath}
 \begin{document}
 
 \title{Analyzing Big Data Streams}
@@ -122,6 +123,28 @@ Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
 % TODO Graphik vom CAP-Theorem
 
 \section{Lambda Architektur}
+Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat the
+CAP-Theorem“ vorgestellt und beruht auf der Beobachtung, dass sich die
+Komplexität in verteilten Systemen aus dem veränderlichen Zustand in
+Datenbanken („mutable state“) und der Nutzung von inkrementellen Algorithmen
+zur Manipulation dieses Zustands ergibt.
+
+Der Autor wirft die Frage auf, wie ein System aussehen würde, dass als
+Kernkomponente eine Append-Only-Datenbank verwendet - das heißt der Zustand
+eines Datums in der Datenbank kann nicht verändert werden. Berechnungen werden
+auf sämtlichen vorhandenen Daten ausgeführt und die Nutzung von inkrementellen
+Algorithmen entfällt.
+
+$\text{Query} = \text{Function(All Data)}$
+
+Die Abfrage wird als Batch-Verarbeitung ausgeführt und das Ergebnis
+abgespeichert. Eine Berechnung auf sämtlichen vorhandenen Daten kann sehr lange
+dauern, dass heißt es gibt keine aktuelle Sicht auf die Daten.
+
+Das Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
+verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
+Realtime Layer und dieser füllt so die entstehende Lücke auf.
+
 \subsection{Batch Layer}
 \subsection{Speed / Realtime Layer}
 
