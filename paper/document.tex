@@ -101,7 +101,26 @@ Um Daten verteilt vorzuhalten, gibt es zwei Ansätze:
 
 Die beiden Ansätze werden in der Praxis häufig kombiniert eingesetzt.
 
-\section{CAP-Theorem}
+\section{Das CAP-Theorem}
+Das CAP-Theorem oder \textit{Brewer's Theorem} wurde öffentlich erstmalig im
+Jahr 2000 auf dem \textit{Symposium on Principles of Distributed Computing}
+vorgestellt und im Jahr 2002 formal bewiesen. Das Theorem besagt, dass ein
+verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten kann:
+
+\begin{description}
+  \item[Konsistenz] Das Lesen eines Wertes liefert immer das Ergebnis des
+    letzten Schreibens.
+  \item[Verfügbarkeit] Das Lesen eines Wertes liefert immer ein Ergebnis,
+    allerdings ohne die Garantie, dass der letzte Schreibvorgang berücksichtigt
+    wurde.
+  \item[Partitionstoleranz] Das System funktioniert unabhängig von der Zahl der
+    verlorenen oder verzögerten Netzwerkpakete.
+\end{description}
+
+Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
+
+% TODO Graphik vom CAP-Theorem
+
 \section{Lambda Architektur}
 \subsection{Batch Layer}
 \subsection{Speed / Realtime Layer}
