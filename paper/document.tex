@@ -160,6 +160,50 @@ die in der Zwischenzeit angefallenen Daten mitbetrachtet. Ist diese
 abgeschlossen ersetzt das Ergebnis wieder das vorherige usw.
 
 \subsection{Speed / Realtime Layer}
+Der Speed-Layer füllt die Versorgungslücke, die entsteht, während die
+Berechnungen des Batch-Layers laufen. Das bedeutet der veränderbare Zusatand,
+der aus der Batch-Verarbeitung heraus gehalten wurde und die damit
+einhergehenden inkrementellen Algorithmen befinden sich jetzt im Speed-Layer
+und führen hier die Berechnungen in Echtzeit aus.
+
+Die Verschiebung der Komplexität in den Speed-Layer bringt einige Vorteile mit
+sich: Die Daten, die vom Speed-Layer berechnet werden, sind nur so lange
+gültig, wie der Batch-Layer für seine Berechnungen braucht. Das bedeutet ein
+Fehler bei der Datenanalyse kann den Betriebsfluss zwar stören - verschwindet
+aber sobald das Batch-System die Daten in der Datenbank unter Einbeziehung des
+neuen Wertes schreibt.
+
+An dieser Stelle ist das System auch Fehlern des Entwicklers über toleranter -
+es kann a) ein Fehler bei der Entwicklung der Verarabeitungslogik im
+Batch-Layer programmiert werden, oder b) bei der Entwicklung des Speed-Layers.
+
+Tritt der Fehler im Batch-Layer auf, so zieht sich der Fehler durch das gesamt
+System und verfälscht die Auswertungen. Da jede Neuberechnung allerdings auf
+sämtlichen historischen Daten basiert (Append-only) kann der Fehler vom
+Entwickler korrigiert werden und die Datenbasis ist nach der Ausbringung der
+Fehlerkorrektur und der nächsten Neuberechnung wieder korrekt. Zukünftige
+Berechnungen des Speed-Layers und Abfragen auf den Datenbestand nutzen die
+korrigiert Version, das heißt es gibt nur temporär eine verfälschte Datenbasis.
+
+Beim Auftreten eines Fehlers im Speed-Layer, so ist wie oben bereits
+angesprochen, nicht die gesamte Datenbasis vom Fehler beeinflusst, sondern nur
+der Zeitraum, seit die letzte Komplettberechnung des Batch-Layers abgeschlossen
+wurde. Davon ausgehend, dass die Berechnungen auf den Daten im Batch-Layer
+korrekt sind, sind somit die historischen Daten nicht vom Fehler beeinflusst.
+
+\subsection{Serving Layer}
+Die eigentliche Komplexität der Lambda-Architektur verbirgt sich hinter dem
+\textit{Serving Layer}. Dieser wird im ursprünglichen Artikel von Nathan Marz
+nicht beschrieben und wurde erstmals XXXX genannt. 
+
+Der Client des verteilten Systems soll im Optimalfall von der Aufteilung der
+Berechnungen in den Batch-Layer und den Speed-Layer nichts mitbekommen. Das
+heißt er muss eine übergreifende Sicht über beide zum Einsatz kommende
+Datenbanken bekommen und Abfragen müssen die Daten aus beiden Datenbanken
+zusammenfassen.
+
+Die Aufgabe des Serving-Layers ist es, dem Client diese Sicht zur Verfügung zu
+stellen und die Komplexität der Berechnungen im Hintergrund zu verbergen.
 
 \section{Hadoop Kernkomponenten}
 \subsection{Hadoop Filesystem}
