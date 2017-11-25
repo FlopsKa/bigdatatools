@@ -226,8 +226,8 @@ Die Daten werden dabei abhängig von der Konfiguration nicht nur auf einem
 Knoten abgelegt, sondern redundant auf mehreren Knoten vorgehalten. Fällt ein
 Knoten aus, so kann die Datei von einem anderen Knoten gelesen werden.
 
-% TODO Standardkonfiguration 3-Fach für Schutz vor Server, Rack, Netzausfällen,
-% Lesefehlern.
+% TODO Standardkonfiguration 3-Fach -  für Schutz vor Server, Rack,
+% Netzausfällen, Lesefehlern.
 
 Um dieses Prinzip umzusetzen nutzt HDFS das Master-Slave-Prinzip: Der Master im
 Cluster speichert, welche Daten auf welchen Slaves vorgehalten werden. Soll auf
