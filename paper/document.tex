@@ -240,11 +240,34 @@ auch darum, dass nun nicht mehr ausreichend replizierte Daten wieder auf andere
 Knoten gespiegelt werden. Da der Master in dieser Konfiguration einen
 \textit{single-point-of-failure} darstellt bietet HDFS zusätzlich eine
 High-Availability Konfiguration, bei der $n$ Master ($n \geq 2$) vorgehalten
-werden. Beim Ausfall eines anderen Masters kann auf einen anderen Master
+werden. Beim Ausfall des aktuell aktiven Masters kann auf einen anderen Master
 umgeschwenkt werden.
 
+% TODO Namenode / Datanode
 
 \subsection{MapReduce Framework}
+Das MapReduce Framework bietet dem Entwickler eine klar definierte
+Schnittstelle für das verteilte Rechnen. Die auf dem MapReduce Framework
+aufsetzenden Algorithmen laufen in 3 Phasen ab. Diese sind schematisch in der
+folgenden Abbildung dargestellt.
+
+\begin{enumerate}
+  \item Map-Phase
+  \item Group- / Shuffle-Phase
+  \item Reduce-Phase
+\end{enumerate}
+
+Die Eingabe des Algorithmus besteht aus Schlüssel- und Werte-Paaren
+$(K_1,V_1)$. Der Map-Schritt übersetzt diese in eine Menge von neuen Schlüssel-
+und Werte-Paaren $(K_2,V_2)$. Der zweite Schritt, der Group- oder
+Shuffle-Schritt, fasst Paare mit dem gleichen Schlüssel zu $(K_2,
+\{V_2,V_2,\ldots,V_2\})$ zusammen. Im letzten Schritt, dem Reduce-Schritt,
+werden die verschiedenen Werte kombiniert. Daraus ergibt sich $(K_3,V_3)$.
+
+Die Vorteile dieser Aufteilung sind die Möglichkeit der automatischen
+Parallelisierung, eine hohe Fehlertoleranz und ein einfaches Verteilen der
+verschiedenen Rechenschritte. Das Map-Reduce-Paradigma wird für die
+Batch-Verarbeitung genutzt.
 
 \section{Verarbeitung von Streams}
 
