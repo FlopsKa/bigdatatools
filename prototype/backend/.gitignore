@@ -2,5 +2,8 @@
 /bin/
 /build
 /.settings/
+/logs/
 .project
 .classpath
+
+*.tar.gz
