@@ -20,7 +20,6 @@ import org.apache.storm.trident.testing.MemoryMapState;
 import org.apache.storm.trident.tuple.TridentTuple;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -34,11 +33,11 @@ public class StormLocalClusterTest {
 	FeederBatchSpout feederBatchSpout;
 
 	@Test
-	@Ignore
 	public void feedKafkaMessagesToTopology() throws Exception {
 		KafkaWord word = new KafkaWord("foobar", "foobar", System.currentTimeMillis() - 200,
 				System.currentTimeMillis());
 		String json = gson.toJson(word);
+		System.out.println(json);
 	}
 
 	@Test

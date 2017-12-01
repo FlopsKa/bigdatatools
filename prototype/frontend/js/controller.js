@@ -19,6 +19,18 @@ function Controller(view) {
         this.setCorrectColor(enteredText);
         this.view.advanceHighlightToNextWord();
         this.currentWordId++;
+        $.ajax({
+          url: "http://localhost:8082/topics/words",
+          type: "POST",
+          crossDomain: true,
+          data: '{"records":[{"value":{"word": "' + enteredText + '"}}]}',
+          dataType: "json",
+          contentType: "application/vnd.kafka.json.v2+json; charset=utf-8",
+          success: function (response) {
+          },
+          error: function (xhr, status) {
+          }
+        }); 
       }
       enteredText = '';
     }
