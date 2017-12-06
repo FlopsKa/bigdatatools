@@ -1,0 +1,104 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+% Presentation metadata
+\title{Analyzing Big Data Streams}
+\author{Florian Kalinke}
+\date{18. Dezember 2017}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[t]{Übersicht}
+  \tableofcontents
+\end{frame}
+
+
+\section{Stream-Verarbeitung}
+
+\subsection{Abgrenzung zur Batch-Verarbeitung}
+
+\begin{frame}[t]{Abgrenzung zur Batch-Verarbeitung}
+  Ausschlaggebend für die Batch-Verarbeitung:
+  \begin{itemize}
+    \item Die Größe der Daten ist bekannt
+    \item Die Menge der Daten ist endlich
+    \item Die Datenmenge kann „vollständig“ verarbeitet werden
+  \end{itemize}
+  Die Streamverarbeitung betrachtet im Gegensatz dazu die Verarbeitung
+  von Daten, die erst während eines \textit{zeitlichen Verlaufs} verfügbar
+  werden.
+
+  % Hier bekommt man schon langsam die Idee: Eigentlich will man beides haben
+\end{frame}
+
+\subsection{Einsatzgebiete}
+\begin{frame}[t]{Einsatzgebiete}
+\begin{itemize}
+  \item Analyse von Sensordaten
+  \item Echtzeitsysteme
+  \item Fraud-Detection
+\end{itemize}
+\end{frame}
+
+\subsection{Sliding / Tumbling Windows}
+\begin{frame}[t]{Sliding / Tumbling Windows}
+\begin{itemize}
+  \item Sliding Window
+    % TODO Bild einfügen
+  \item Tumbing Window
+    % TODO Bild einfügen
+\end{itemize}
+\end{frame}
+
+\subsection{Lambda Architektur}
+\begin{frame}[t]{Lambda Architektur}
+  Der Name leitet sich aus dem Lambda-Kalkül als Grundlage der
+  funktionalen Programmierung ab: Berechnungen im Batch-Layer werden
+  nur auf unveränderlichen Daten ausgeführt.
+\begin{figure}[h]
+	\center
+	\scalebox{.4}{\input{./tikz/lambda.tex}}
+	\caption{Schematische Darstellung der Lambda-Architektur}
+	\label{fig:lambdaarch}
+\end{figure}
+	% \includegraphics[width=\textwidth]{img/swhistfig.png}
+\end{frame}
+
+\section{Apache Storm Framework}
+\begin{frame}[t]{Apache Storm Framework}
+\end{frame}
+
+\subsection{Komponenten}
+\begin{frame}[t]{Komponenten}
+\end{frame}
+
+\subsection{Exactly-Once- / At-Least-Once-Semantik}
+\begin{frame}[t]{Exactly-Once- / At-Least-Once-Semantik}
+\end{frame}
+
+\subsection{Storm Trident}
+\begin{frame}[t]{Storm Trident}
+\end{frame}
+
+\section{Word Count Beispiel}
+\begin{frame}[t]{Word Count Beispiel}
+\end{frame}
+
+\section{Quellen}
+\begin{frame}[t]{Quellen}
+\end{frame}
+
+\end{document}
+
+
