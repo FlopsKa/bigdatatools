@@ -9,6 +9,29 @@
 \usepackage{tikz}
 \usepackage{graphicx}
 \usepackage{tabularx}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 % Presentation metadata
 \title{Analyzing Big Data Streams}
@@ -26,6 +49,35 @@
 
 \section{Stream-Verarbeitung}
 
+\subsection{Einsatzgebiete}
+\begin{frame}[t]{Einsatzgebiete}
+\begin{itemize}
+  \item Analyse von Sensordaten
+  \item IoT Devices
+  \item Fraud-Detection
+  \item Complex Event Processing
+  \item High Speed Trading Systeme
+  \item Klickstream-Analyse
+
+  \item Echtzeitsysteme
+\end{itemize}
+\end{frame}
+
+\subsection{The Big Picture}
+\begin{frame}[t]{The Big Picture}
+  Bild von https://docs.microsoft.com/de-de/azure/stream-analytics/stream-analytics-introduction 
+\end{frame}
+
+\subsection{Microbatches - Sliding / Tumbling Windows}
+\begin{frame}[t]{Sliding / Tumbling Windows}
+\begin{itemize}
+  \item Sliding Window
+    % TODO Bild einfügen
+  \item Tumbing Window
+    % TODO Bild einfügen
+\end{itemize}
+\end{frame}
+
 \subsection{Abgrenzung zur Batch-Verarbeitung}
 
 \begin{frame}[t]{Abgrenzung zur Batch-Verarbeitung}
@@ -42,53 +94,127 @@
   % Hier bekommt man schon langsam die Idee: Eigentlich will man beides haben
 \end{frame}
 
-\subsection{Einsatzgebiete}
-\begin{frame}[t]{Einsatzgebiete}
-\begin{itemize}
-  \item Analyse von Sensordaten
-  \item Echtzeitsysteme
-  \item Fraud-Detection
-\end{itemize}
-\end{frame}
-
-\subsection{Sliding / Tumbling Windows}
-\begin{frame}[t]{Sliding / Tumbling Windows}
-\begin{itemize}
-  \item Sliding Window
-    % TODO Bild einfügen
-  \item Tumbing Window
-    % TODO Bild einfügen
-\end{itemize}
-\end{frame}
 
 \subsection{Lambda Architektur}
 \begin{frame}[t]{Lambda Architektur}
-  Der Name leitet sich aus dem Lambda-Kalkül als Grundlage der
-  funktionalen Programmierung ab: Berechnungen im Batch-Layer werden
-  nur auf unveränderlichen Daten ausgeführt.
 \begin{figure}[h]
 	\center
 	\scalebox{.4}{\input{./tikz/lambda.tex}}
 	\caption{Schematische Darstellung der Lambda-Architektur}
 	\label{fig:lambdaarch}
 \end{figure}
+  Der Name leitet sich aus dem Lambda-Kalkül als Grundlage der
+  funktionalen Programmierung ab: Berechnungen im Batch-Layer werden
+  nur auf unveränderlichen Daten ausgeführt.
 	% \includegraphics[width=\textwidth]{img/swhistfig.png}
 \end{frame}
 
 \section{Apache Storm Framework}
 \begin{frame}[t]{Apache Storm Framework}
+  \begin{itemize}
+    \item kostenlose open-source Software
+    \item Echtzeitverarbeitung von „unbounded“ Streams
+    \item bis zu 1M+ Tuple / Sekunde / Knoten
+    \item skalierbar, fehlertolerant, guaranteed-message-processing
+  \end{itemize}
 \end{frame}
 
 \subsection{Komponenten}
-\begin{frame}[t]{Komponenten}
+\begin{frame}[t]{Tuple}
+  \begin{quote}
+    Ein Tupel besteht aus einer Liste endlich vieler, nicht notwendigerweise voneinander verschiedener Objekte.
+  \end{quote}
+
+  \begin{align*}
+    (x_1, \ldots , x_n)
+  \end{align*}
 \end{frame}
+
+\begin{frame}[t]{Stream}
+  \begin{quote}
+    [\ldots] einen kontinuierlichen Fluss von Datensätzen, dessen Ende meist nicht im Voraus abzusehen ist; die Datensätze werden fortlaufend verarbeitet, sobald jeweils ein neuer Datensatz eingetroffen ist.
+  \end{quote}
+
+  \begin{align*}
+    (x_1, \ldots , x_n)
+    (x_1, \ldots , x_n)
+    (x_1, \ldots , x_n)
+    (x_1, \ldots , x_n)
+  \end{align*}
+\end{frame}
+
+\begin{frame}[t]{Spout}
+  Quelle der Streams - die Tupel werden von hier gesendet: 
+  \begin{itemize}
+    \item Kafka 
+    \item Twitter 
+    \item Kestrel 
+    \item redis
+    \item \ldots
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Bolt}
+  Im Bolt findet die tatsächliche Verarbeitung statt.
+  \begin{lstlisting}
+void execute(Tuple input, BasicOutputCollector collector)
+{
+  /* do some magic stuff here, e.g:
+  * - count words
+  * - write to database
+  * - combine data
+  */
+  ...
+}
+
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[t]{Worker / Exekutoren / Tasks}
+  Schaubild aus der Präsentation von der Homepage
+\end{frame}
+
 
 \subsection{Exactly-Once- / At-Least-Once-Semantik}
 \begin{frame}[t]{Exactly-Once- / At-Least-Once-Semantik}
+  Storm bietet „Guaranteed Message Processing“ $\Rightarrow$ allerdings mit
+  At-Least-Once-Semantik
+  \begin{itemize}
+    \item Nachrichten werden auf jeden Fall verarbeitet
+    \item im Fehlerfall wird die gleiche Nachricht nochmal gesendet
+  \end{itemize}
+  Werden die Tuple nicht einzeln, sondern als (Micro-)Batch verarbeitet, so bietet Storm Trident
+  \begin{itemize}
+    \item Non-Transactional
+    \item Transactional
+    \item Opaque Transactional
+  \end{itemize}
+  Verarbeitung. Damit ist eine Exactly-Once-Verarbeitung möglich.
 \end{frame}
 
 \subsection{Storm Trident}
 \begin{frame}[t]{Storm Trident}
+  Trident ist ein High-Level-Aufsatz auf Storm mit vorgefertigten Operationen:
+  \begin{itemize}
+    \item Merges / Joins
+    \item Aggregationen (Count / Sum / Max)
+    \item Gruppierungen
+    \item Funktionen
+    \item Filter
+  \end{itemize}
+\end{frame}
+
+\subsection{Powered By Storm}
+\begin{frame}[t]{Powered By Storm}
+  \begin{itemize}
+    \item Groupon
+    \item Twitter
+    \item Yahoo!
+    \item Spotify
+    \item Alibaba
+    \item Yelp
+    \item PARC
+  \end{itemize}
 \end{frame}
 
 \section{Word Count Beispiel}
