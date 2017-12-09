@@ -23,7 +23,7 @@
   belowskip=3mm,
   showstringspaces=false,
   columns=flexible,
-  basicstyle={\small\ttfamily},
+  basicstyle={\tiny\ttfamily},
   numbers=none,
   numberstyle=\tiny\color{gray},
   keywordstyle=\color{blue},
@@ -301,8 +301,44 @@ void execute(Tuple input, BasicOutputCollector collector)
 
 \section{Word Count Beispiel}
 \begin{frame}[t]{Word Count Beispiel}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.3,natwidth=750,natheight=234]{img/webapp.png}
+    \caption{Screenshot von http://github.com/flopska/bigdatatools/}
+  \end{figure}
 \end{frame}
 
+\begin{frame}[t]{Word Count Beispiel}
+  \begin{figure}[h]
+    \center
+    \scalebox{.8}{\input{./tikz/architecture.tex}}
+    \caption{Architektur des Word Count Beispiels}
+    \label{fig:wordcountsamplearchitecture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Word Count Beispiel}
+  \begin{lstlisting}
+public static void main(String[] args) {
+	TridentTopology topology = new TridentTopology();
+	BrokerHosts zk = new ZkHosts("localhost");
+	TridentKafkaConfig spoutConf = new TridentKafkaConfig(zk, "words");
+	spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
+	OpaqueTridentKafkaSpout spout = new OpaqueTridentKafkaSpout(spoutConf);
+	WindowsStoreFactory mapState = new InMemoryWindowsStoreFactory();
+
+	SlidingDurationWindow windowConfig = SlidingDurationWindow.of(
+			new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS),
+			new BaseWindowedBolt.Duration(1, TimeUnit.SECONDS));
+	topology.newStream("words", spout)
+			.window(windowConfig, mapState, new Fields("str"), new CountAsAggregator(), new Fields("count"))
+			.filter(new Debug());
+
+	LocalCluster cluster = new LocalCluster("localhost", 2181L);
+	cluster.submitTopology("localCluster2", new Config(), topology.build());
+}
+  \end{lstlisting}
+\end{frame}
 \section{Quellen}
 \begin{frame}[t]{Quellen}
 \end{frame}
