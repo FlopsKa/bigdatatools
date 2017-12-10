@@ -11,6 +11,8 @@
 \usepackage{color}
 \usetikzlibrary{shapes,decorations.pathreplacing,angles,quotes}
 \usetheme{metropolis}
+\setbeamertemplate{section in toc}[sections numbered]
+%\setbeamertemplate{subsection in toc}[subsections numbered]
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -43,6 +45,7 @@
 \maketitle
 
 \begin{frame}[t]{Übersicht}
+  \vspace*{0.5cm}
   \renewcommand{\baselinestretch}{0.75}\normalsize
   \tableofcontents
   \renewcommand{\baselinestretch}{1.0}\normalsize
@@ -70,7 +73,7 @@
   \begin{figure}
     \centering
     \includegraphics[scale=0.4]{img/stream_analytics_intro_pipeline.png}
-    \caption{ Bild von https://docs.microsoft.com/de-de/azure/stream-analytics/stream-analytics-introduction }
+    \caption{Übersicht einer Stream-Analyse Plattform\hspace{\linewidth} Bild von https://docs.microsoft.com/de-de/azure/stream-analytics/stream-analytics-introduction }
   \end{figure}
 \end{frame}
 
@@ -244,7 +247,7 @@
     \centering
   %\includegraphics[width=\textwidth,natwidth=563,natheight=341]{img/relationships-worker-processes-executors-tasks.png}
     \includegraphics[scale=0.8]{img/relationships-worker-processes-executors-tasks.png}
-    \caption{ Bild von http://storm.apache.org/releases/1.1.1/Understanding-the-parallelism-of-a-Storm-topology.html}
+    \caption{Storm Prozessschaubild\hspace{\linewidth}Bild von http://storm.apache.org/releases/1.1.1/Understanding-the-parallelism-of-a-Storm-topology.html}
   \end{figure}
 \end{frame}
 
@@ -298,7 +301,7 @@
   \begin{figure}
     \centering
     \includegraphics[scale=0.3,natwidth=750,natheight=234]{img/webapp.png}
-    \caption{Screenshot von http://github.com/flopska/bigdatatools/}
+    \caption{Erzeugen eines Wort-Streams\hspace{\linewidth}Screenshot von http://github.com/flopska/bigdatatools/}
   \end{figure}
 \end{frame}
 
