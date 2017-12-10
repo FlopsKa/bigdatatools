@@ -1,8 +1,6 @@
 \documentclass{beamer}
 
-\usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
-\usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{mathtools}
 \usepackage{amssymb}
@@ -12,6 +10,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usetikzlibrary{shapes,decorations.pathreplacing,angles,quotes}
+\usetheme{metropolis}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -44,7 +43,9 @@
 \maketitle
 
 \begin{frame}[t]{Übersicht}
+  \renewcommand{\baselinestretch}{0.75}\normalsize
   \tableofcontents
+  \renewcommand{\baselinestretch}{1.0}\normalsize
 \end{frame}
 
 
@@ -68,7 +69,7 @@
 \begin{frame}[t]{The Big Picture}
   \begin{figure}
     \centering
-    \includegraphics[width=\textwidth,natwidth=826,natheight=462]{img/stream_analytics_intro_pipeline.png}
+    \includegraphics[scale=0.4]{img/stream_analytics_intro_pipeline.png}
     \caption{ Bild von https://docs.microsoft.com/de-de/azure/stream-analytics/stream-analytics-introduction }
   \end{figure}
 \end{frame}
@@ -171,8 +172,8 @@
   \begin{quote}
     Ein Tupel besteht aus einer Liste endlich vieler, nicht notwendigerweise voneinander verschiedener Objekte.
   \end{quote}
-  \setlength{\abovedisplayskip}{0pt}
-  \setlength{\abovedisplayshortskip}{0pt}
+  \setlength{\abovedisplayskip}{-20pt}
+  \setlength{\abovedisplayshortskip}{-20pt}
   \begin{align*}
     (x_1, \ldots , x_n)
   \end{align*}
@@ -242,7 +243,7 @@
   \begin{figure}
     \centering
   %\includegraphics[width=\textwidth,natwidth=563,natheight=341]{img/relationships-worker-processes-executors-tasks.png}
-    \includegraphics[scale=0.8,natwidth=563,natheight=341]{img/relationships-worker-processes-executors-tasks.png}
+    \includegraphics[scale=0.8]{img/relationships-worker-processes-executors-tasks.png}
     \caption{ Bild von http://storm.apache.org/releases/1.1.1/Understanding-the-parallelism-of-a-Storm-topology.html}
   \end{figure}
 \end{frame}
@@ -334,31 +335,31 @@
 \end{frame}
 
 \section{Literatur}
-\begin{frame}[t]{Quellen}
+\begin{frame}[shrink=10]{Quellen}
   \begin{thebibliography}{Kleppmann, 2017}
       \setbeamertemplate{bibliography item}[book]
-    \bibitem[Kleppmann, 2017]{Kleppmann2017}
+      \bibitem[Kleppmann, 2017]{Kleppmann2017}
       M.~Kleppmann.
       \newblock {\em Designing Data-Intensive Applications, 1st Edition}.
-      \newblock \small{O'Reilly Media, Inc., 2017}
+      \newblock O'Reilly Media, Inc., 2017
 
       \setbeamertemplate{bibliography item}[online]
-    \bibitem[aufgerufen am 8. Dez 2017]{MicrosoftStreams}
+      \bibitem[aufgerufen am 8. Dez 2017]{MicrosoftStreams}
       Microsoft
       \newblock {\em Was ist Stream Analytics?}.
       \newblock https://docs.microsoft.com/de-de/azure/stream-analytics/stream-analytics-introduction 
 
-    \bibitem[aufgerufen am 8. Dez 2017]{MarzCAP}
+      \bibitem[aufgerufen am 8. Dez 2017]{MarzCAP}
       N.~Marz.
       \newblock {\em How to beat the CAP Theorem}.
       \newblock http://nathanmarz.com/blog/how-to-beat-the-cap-theorem.html 
 
-    \bibitem[aufgerufen am 8. Dez 2017]{StormTutorial}
+      \bibitem[aufgerufen am 8. Dez 2017]{StormTutorial}
       Apache~Storm
       \newblock {\em Storm Tutorial}.
       \newblock http://storm.apache.org/releases/1.1.1/Tutorial.html 
 
-    \bibitem[aufgerufen am 8. Dez 2017]{StormConcepts}
+      \bibitem[aufgerufen am 8. Dez 2017]{StormConcepts}
       Apache~Storm
       \newblock {\em Storm Concepts}.
       \newblock http://storm.apache.org/releases/1.1.1/Concepts.html
