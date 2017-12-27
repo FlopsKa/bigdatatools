@@ -1,269 +1,333 @@
 \documentclass[a4paper,11pt]{scrartcl}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{tikz}
 \usepackage{amsmath}
+\usetikzlibrary{shapes,decorations.pathreplacing,angles,quotes}
 \begin{document}
 
 \title{Analyzing Big Data Streams}
 \author{Florian Kalinke%
-   \thanks{E-mail: \texttt{flops.ka@gmail.com}}}
-\date{November 2017}
-\maketitle
+  \thanks{E-mail: \texttt{flops.ka@gmail.com}}}
+  \date{November 2017}
+  \maketitle
 
-\begin{abstract}
-   Das ist die Kurzfassung.
-\end{abstract}
+  \begin{abstract}
+    Das ist die Kurzfassung.
+  \end{abstract}
 
-\tableofcontents
+  \tableofcontents
 
-\section{Einleitung}
-Der Begriff \textit{Big Data} ist eines der aktuellen Buzzwords der Informatik.
-Unternehmen speichern ihre Daten ab und versuchen Erkenntnisse aus dem
-Datenbestand abzuleiten. Abhängig von diesen Ergebnissen können strategische
-Entscheidungen getroffen werden, um dem Unternehmen so einen wirtschaftlichen
-Vorteil zu ermöglichen. Historisch gesehen ist dieses Vorgehen bereits
-etabliert - die zu analysierende Datenmenge steigt allerdings stark an und
-schafft so neue Herausforderungen bei der Analyse der Daten.
+  \section{Einleitung}
+  Der Begriff \textit{Big Data} ist eines der aktuellen Buzzwords der Informatik.
+  Unternehmen speichern ihre Daten ab und versuchen Erkenntnisse aus dem
+  Datenbestand abzuleiten. Abhängig von diesen Ergebnissen können strategische
+  Entscheidungen getroffen werden, um dem Unternehmen so einen wirtschaftlichen
+  Vorteil zu ermöglichen. Historisch gesehen ist dieses Vorgehen bereits
+  etabliert - die zu analysierende Datenmenge steigt allerdings stark an und
+  schafft so neue Herausforderungen bei der Analyse der Daten.
 
-Obwohl nicht genau definiert ist, ab wann es sich bei der Datenverarbeitung um
-\textit{Big Data} handelt, hat sich die folgende Definition durchgesetzt:
+  Obwohl nicht genau definiert ist, ab wann es sich bei der Datenverarbeitung um
+  \textit{Big Data} handelt, hat sich die folgende Definition durchgesetzt:
 
-Datenmengen, die zu groß, zu komplex oder zu schnelllebig sind, um sie mit
-traditionellen Methoden der Datenhaltung zu speichern und auszuwerten werden
-als Big Data bezeichnet. Diese Einordnung geht davon aus, dass die Daten einem
-oder mehreren der 3 „V“s entsprechen:
-\begin{description}
-  \item[Volume] Die Datenmengen sind im Tera-, Peta- oder Exabytebereich.
-  \item[Velocity] Die Daten müssen in Echtzeit verarbeitet und analysiert
-    werden.
-  \item[Variety] Die Daten müssen keinem bestimmten Schema entsprechen, sie
-    sind sowohl strukturiert, semistrukturiert als auch unstrukturiert.
-\end{description}
+  Datenmengen, die zu groß, zu komplex oder zu schnelllebig sind, um sie mit
+  traditionellen Methoden der Datenhaltung zu speichern und auszuwerten werden
+  als Big Data bezeichnet. Diese Einordnung geht davon aus, dass die Daten einem
+  oder mehreren der 3 „V“s entsprechen:
+  \begin{description}
+    \item[Volume] Die Datenmengen sind im Tera-, Peta- oder Exabytebereich.
+    \item[Velocity] Die Daten müssen in Echtzeit verarbeitet und analysiert
+      werden.
+    \item[Variety] Die Daten müssen keinem bestimmten Schema entsprechen, sie
+      sind sowohl strukturiert, semistrukturiert als auch unstrukturiert.
+  \end{description}
 
-Bei der Verarbeitung der Daten wird zwischen der \textit{Batch-} und
-\textit{Stream-}Verarbeitung differenziert. Die Batch-Verarbeitung geht davon
-aus, dass auf einer begrenzten Menge von Daten operiert wird. Das bedeutet,
-dass die Größe der Daten bekannt und endlich ist. Die Datenmenge kann
-„vollständig“ verarbeitet werden. Im Gegensatz dazu betrachtet die
-Stream-Verarbeitung die Verarbeitung von Daten, die erst während eines
-zeitlichen Verlaufs verfügbar werden.
+  Bei der Verarbeitung der Daten wird zwischen der \textit{Batch-} und
+  \textit{Stream-}Verarbeitung differenziert. Die Batch-Verarbeitung geht davon
+  aus, dass auf einer begrenzten Menge von Daten operiert wird. Das bedeutet,
+  dass die Größe der Daten bekannt und endlich ist. Die Datenmenge kann
+  „vollständig“ verarbeitet werden. Im Gegensatz dazu betrachtet die
+  Stream-Verarbeitung die Verarbeitung von Daten, die erst während eines
+  zeitlichen Verlaufs verfügbar werden.
 
-Betrachtet man exemplarisch die Analyse der Besucherzahlen einer Webseite, so
-lassen sich über Batch-Verarbeitung beispielsweise die Fragen beantworten „Wie
-viele Personen haben die Webseite gestern aufgerufen? Wie viele vorgestern?
-Wie viele in der vergangenen Woche?
+  Betrachtet man exemplarisch die Analyse der Besucherzahlen einer Webseite, so
+  lassen sich über Batch-Verarbeitung beispielsweise die Fragen beantworten „Wie
+  viele Personen haben die Webseite gestern aufgerufen? Wie viele vorgestern?
+  Wie viele in der vergangenen Woche?
 
-Analog betrachtet die Stream-Verarbeitung die Fragestellungen: Wie viele
-Besucher waren in der letzten Minute auf der Seite aktiv? Wie viele in den
-letzten 10 Sekunden? Sind aktuell Besucher auf der Seite? Über
-Stream-Verarbeitung können diese Daten in Echzeit analysiert und die Ergebnisse
-betrachtet werden.
+  Analog betrachtet die Stream-Verarbeitung die Fragestellungen: Wie viele
+  Besucher waren in der letzten Minute auf der Seite aktiv? Wie viele in den
+  letzten 10 Sekunden? Sind aktuell Besucher auf der Seite? Über
+  Stream-Verarbeitung können diese Daten in Echzeit analysiert und die Ergebnisse
+  betrachtet werden.
 
-Weitere Einsatzgebiete sind zum Beispiel:
-\begin{description}
-  \item[Analyse von Sensordaten] Dies kann zum Beispiel durch die Sensorik im
-    Auto illustriert werden: Die Werte verschiedener Sensoren zum Beispiel
-    Beschleunigungssensor, Geschwindigkeitssensor und Abstandssensor, werden in
-    Echtzeit zusammengeführt.
-  \item[IoT Devices] Mit der zunehmenden Verbreitung von IoT Devices nimmt auch
-    hier die eh schon sehr hohe Datenmenge zu: An eine zentrale Stelle werden
-    verschiedene Events von unterschiedlichen Geräten gemeldet, zum Beispiel
-    die Helligkeit des Raumes, ob sich eine Person in einem Raum befindet und
-    die aktuelle Raumtemperatur.
-  \item[Fraud Detection] In Echtzeit soll für Überweisungen geprüft werden, ob
-    diese vom eigentlichen Bankkunden ausgeführt wurde, oder ob ein Betrüger
-    diese im Namen des Kunden initiiert hat. Überweisungen, die der Kunde nicht
-    selbst (oder unbewusst) in Auftrag gegeben hat, sollen aufgehalten werden.
-  \item[Complex Event Processing] Beim Complex Event Processing wird in einem
-    Datenstrom nach vorher festgelegten Mustern gesucht. Das bedeutet der
-    Anwender legt Abfragen (ähnlich zu SQL) fest und der Stream wird
-    kontinuierlich auf das Auftreten der definierten Muster geprüft.
-  \item[High Speed Trading] Abhängig von Schwankungen der Aktien einer Börse
-    sollen passende Wertpapiere gekauft oder verkauft werden, um den eigenen
-    Gewinn zu maximieren. Im Optimalfall finden die Aktionen schneller statt,
-    als die Konkurrenz diese ausführen kann.
-  \item[Klickstreamanalyse] Der Bewegungspfad des Besuchers einer Webseite wird
-    aufgezeichnet und analysiert. Abhängig vom Verhalten des Nutzers kann
-    dieser zum Beispiel klassifiziert werden und es wird passende Werbung
-    gezeigt.
-\end{description}
+  Weitere Einsatzgebiete sind zum Beispiel:
+  \begin{description}
+    \item[Analyse von Sensordaten] Dies kann zum Beispiel durch die Sensorik im
+      Auto illustriert werden: Die Werte verschiedener Sensoren zum Beispiel
+      Beschleunigungssensor, Geschwindigkeitssensor und Abstandssensor, werden in
+      Echtzeit zusammengeführt.
+    \item[IoT Devices] Mit der zunehmenden Verbreitung von IoT Devices nimmt auch
+      hier die eh schon sehr hohe Datenmenge zu: An eine zentrale Stelle werden
+      verschiedene Events von unterschiedlichen Geräten gemeldet, zum Beispiel
+      die Helligkeit des Raumes, ob sich eine Person in einem Raum befindet und
+      die aktuelle Raumtemperatur.
+    \item[Fraud Detection] In Echtzeit soll für Überweisungen geprüft werden, ob
+      diese vom eigentlichen Bankkunden ausgeführt wurde, oder ob ein Betrüger
+      diese im Namen des Kunden initiiert hat. Überweisungen, die der Kunde nicht
+      selbst (oder unbewusst) in Auftrag gegeben hat, sollen aufgehalten werden.
+    \item[Complex Event Processing] Beim Complex Event Processing wird in einem
+      Datenstrom nach vorher festgelegten Mustern gesucht. Das bedeutet der
+      Anwender legt Abfragen (ähnlich zu SQL) fest und der Stream wird
+      kontinuierlich auf das Auftreten der definierten Muster geprüft.
+    \item[High Speed Trading] Abhängig von Schwankungen der Aktien einer Börse
+      sollen passende Wertpapiere gekauft oder verkauft werden, um den eigenen
+      Gewinn zu maximieren. Im Optimalfall finden die Aktionen schneller statt,
+      als die Konkurrenz diese ausführen kann.
+    \item[Klickstreamanalyse] Der Bewegungspfad des Besuchers einer Webseite wird
+      aufgezeichnet und analysiert. Abhängig vom Verhalten des Nutzers kann
+      dieser zum Beispiel klassifiziert werden und es wird passende Werbung
+      gezeigt.
+  \end{description}
 
-Alle Einsatzgebiete haben gemeinsam, dass es sich um „Echtzeitsysteme“ handelt:
-Aus den anfallenden Daten sollen möglichst schnell Informationen gewonnen
-werden. Oft ist es sogar so, dass die Qualität der Informationen, die aus den
-Daten gewonnen werden können, bei längerer Verarbeitungsdauer abnimmt.
+  Alle Einsatzgebiete haben gemeinsam, dass es sich um „Echtzeitsysteme“ handelt:
+  Aus den anfallenden Daten sollen möglichst schnell Informationen gewonnen
+  werden. Oft ist es sogar so, dass die Qualität der Informationen, die aus den
+  Daten gewonnen werden können, bei längerer Verarbeitungsdauer abnimmt.
 
-Die vorliegende Arbeit gibt einen allgemeinen Einblick in die Verarbeitung von
-Streams und zeigt im Anschluss detailliert die Möglichkeiten der Verarbeitung
-von Streams mit dem Apache Storm Framework.
+  Die vorliegende Arbeit gibt einen allgemeinen Einblick in die Verarbeitung von
+  Streams und zeigt im Anschluss detailliert die Möglichkeiten der Verarbeitung
+  von Streams mit dem Apache Storm Framework.
 
 % TODO Kapitelbeschreibung
 
-\section{Datenhaltung bei Big Data}
-Die Verarbeitung von den in der Einleitung beschriebenen Datenmengen bringt
-eine Menge an Herausforderungen mit sich: Ein einzelner Rechner ist zu schwach,
-um die Menge an Daten a) abzuspeichern und b) Berechnungen auf diesen Daten
-auszuführen. Aus diesem Grund wird für die Verarbeitung von Big Data im
-Normalfall \textit{horizontal} skaliert. Das bedeutet, dass die Verarbeitung
-statt auf einem extrem performanten Rechner auf viele Rechner verteilt wird.
-Hier kommt sogenannte \textit{Commodity Hardware} zum Einsatz: Handelsübliche
-Rechner, die im Verbund agieren und auf die anfallende Arbeit aufgeteilt wird.
+  \section{Datenhaltung bei Big Data}
+  Die Verarbeitung von den in der Einleitung beschriebenen Datenmengen bringt
+  eine Menge an Herausforderungen mit sich: Ein einzelner Rechner ist zu schwach,
+  um die Menge an Daten a) abzuspeichern und b) Berechnungen auf diesen Daten
+  auszuführen. Aus diesem Grund wird für die Verarbeitung von Big Data im
+  Normalfall \textit{horizontal} skaliert. Das bedeutet, dass die Verarbeitung
+  statt auf einem extrem performanten Rechner auf viele Rechner verteilt wird.
+  Hier kommt sogenannte \textit{Commodity Hardware} zum Einsatz: Handelsübliche
+  Rechner, die im Verbund agieren und auf die anfallende Arbeit aufgeteilt wird.
 
-Reduziert man Big Data auf die zu speichernde Datenmenge gibt es drei
-Hauptgründe, die Last auf verschiedene Rechner zu verteilen:
+  Reduziert man Big Data auf die zu speichernde Datenmenge gibt es drei
+  Hauptgründe, die Last auf verschiedene Rechner zu verteilen:
 
-\begin{description}
-  \item[Skalierbarkeit] Die Daten können aufgrund des Speicherplatzes, der
-    Schreibgeschwindigkeit oder der Lesegeschwindigkeit nicht auf einem
-    einzelnen Rechner gespeichert werden.
-  \item[Fehlertoleranz / Ausfallsicherheit] Das System soll nicht von einer
-    einzelnen Maschine abhängig sein. Fällt ein Rechner aus, kann ein anderer
-    die Arbeit übernehmen. Je mehr Rechner an einem System beteiligt sind,
-    desto wahrscheinlicher ist es, dass einzelne Rechner oder einzelne
-    Komponenten ausfallen.
-  \item[Latenz] Sind die Daten auf einem Rechner, der sich geographisch nah am
-    Ort des Zugriffs befindet, so müssen Netwerkpakete eine geringere Strecke
-    zurücklegen und der Zugriff wird beschleunigt.
-\end{description}
+  \begin{description}
+    \item[Skalierbarkeit] Die Daten können aufgrund des Speicherplatzes, der
+      Schreibgeschwindigkeit oder der Lesegeschwindigkeit nicht auf einem
+      einzelnen Rechner gespeichert werden.
+    \item[Fehlertoleranz / Ausfallsicherheit] Das System soll nicht von einer
+      einzelnen Maschine abhängig sein. Fällt ein Rechner aus, kann ein anderer
+      die Arbeit übernehmen. Je mehr Rechner an einem System beteiligt sind,
+      desto wahrscheinlicher ist es, dass einzelne Rechner oder einzelne
+      Komponenten ausfallen.
+    \item[Latenz] Sind die Daten auf einem Rechner, der sich geographisch nah am
+      Ort des Zugriffs befindet, so müssen Netwerkpakete eine geringere Strecke
+      zurücklegen und der Zugriff wird beschleunigt.
+  \end{description}
 
-Um Daten verteilt vorzuhalten, gibt es zwei Ansätze:
+  Um Daten verteilt vorzuhalten, gibt es zwei Ansätze:
 
-\begin{description}
-  \item[Replikation] Die gleichen Daten werden auf verschiedenen Knoten
-    vorgehalten, sind also redundant gespeichert. Fällt ein Knoten aus, so
-    können die Daten von einem anderen Knoten gelesen werden.
-  \item[Partitionierung] Eine große Datenbank wird in Teilmengen zerlegt, die
-    dann verschiedenen Knoten zugewiesen werden.
-\end{description}
+  \begin{description}
+    \item[Replikation] Die gleichen Daten werden auf verschiedenen Knoten
+      vorgehalten, sind also redundant gespeichert. Fällt ein Knoten aus, so
+      können die Daten von einem anderen Knoten gelesen werden.
+    \item[Partitionierung] Eine große Datenbank wird in Teilmengen zerlegt, die
+      dann verschiedenen Knoten zugewiesen werden.
+  \end{description}
 
-Die beiden Ansätze werden in der Praxis häufig kombiniert eingesetzt.
+  Die beiden Ansätze werden in der Praxis häufig kombiniert eingesetzt.
 
-\section{Das CAP-Theorem}
-Das CAP-Theorem oder \textit{Brewer's Theorem} wurde öffentlich erstmalig im
-Jahr 2000 auf dem \textit{Symposium on Principles of Distributed Computing}
-vorgestellt und im Jahr 2002 formal bewiesen. Das Theorem besagt, dass ein
-verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten kann:
+  \section{Das CAP-Theorem}
+  Das CAP-Theorem oder \textit{Brewer's Theorem} wurde öffentlich erstmalig im
+  Jahr 2000 auf dem \textit{Symposium on Principles of Distributed Computing}
+  vorgestellt und im Jahr 2002 formal bewiesen. Das Theorem besagt, dass ein
+  verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten kann:
 
-\begin{description}
-  \item[Konsistenz] Das Lesen eines Wertes liefert immer das Ergebnis des
-    letzten Schreibens.
-  \item[Verfügbarkeit] Das Lesen eines Wertes liefert immer ein Ergebnis,
-    allerdings ohne die Garantie, dass der letzte Schreibvorgang berücksichtigt
-    wurde.
-  \item[Partitionstoleranz] Das System funktioniert unabhängig von der Zahl der
-    verlorenen oder verzögerten Netzwerkpakete.
-\end{description}
+  \begin{description}
+    \item[Konsistenz] Das Lesen eines Wertes liefert immer das Ergebnis des
+      letzten Schreibens.
+    \item[Verfügbarkeit] Das Lesen eines Wertes liefert immer ein Ergebnis,
+      allerdings ohne die Garantie, dass der letzte Schreibvorgang berücksichtigt
+      wurde.
+    \item[Partitionstoleranz] Das System funktioniert unabhängig von der Zahl der
+      verlorenen oder verzögerten Netzwerkpakete.
+  \end{description}
 
-Zu beachten ist hier, dass nicht explizit zwei Garantien gewählt werden müssen
-- gewählt werden muss zwischen Konsistenz und Verfügbarkeit, wenn tatsächlich
-ein Netwerkfehler auftritt.
+  Zu beachten ist hier, dass nicht explizit zwei Garantien gewählt werden müssen
+  - gewählt werden muss zwischen Konsistenz und Verfügbarkeit, wenn tatsächlich
+  ein Netwerkfehler auftritt.
 
-Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
+  Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
 
 % TODO Graphik vom CAP-Theorem
 
-\section{Lambda Architektur}
-Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat the
-CAP-Theorem“ vorgestellt und beruht auf der Beobachtung, dass sich die
-Komplexität in verteilten Systemen aus dem veränderlichen Zustand in
-Datenbanken („mutable state“) und der Nutzung von inkrementellen Algorithmen
-zur Manipulation dieses Zustands ergibt.
+  \section{Lambda Architektur}
+  Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat the
+  CAP-Theorem“ vorgestellt und beruht auf der Beobachtung, dass sich die
+  Komplexität in verteilten Systemen aus dem veränderlichen Zustand in
+  Datenbanken („mutable state“) und der Nutzung von inkrementellen Algorithmen
+  zur Manipulation dieses Zustands ergibt.
 
-Der Autor wirft die Frage auf, wie ein System aussehen würde, dass als
-Kernkomponente eine Append-Only-Datenbank verwendet - das heißt der Zustand
-eines Datums in der Datenbank kann nicht verändert werden. Berechnungen werden
-auf sämtlichen vorhandenen Daten ausgeführt und die Nutzung von inkrementellen
-Algorithmen entfällt.
+  Der Autor wirft die Frage auf, wie ein System aussehen würde, dass als
+  Kernkomponente eine Append-Only-Datenbank verwendet - das heißt der Zustand
+  eines Datums in der Datenbank kann nicht verändert werden. Berechnungen werden
+  auf sämtlichen vorhandenen Daten ausgeführt und die Nutzung von inkrementellen
+  Algorithmen entfällt.
 
-$\text{Query} = \text{Function(All Data)}$
+  $\text{Query} = \text{Function(All Data)}$
 
-Die Abfrage wird als Batch-Verarbeitung ausgeführt und das Ergebnis
-abgespeichert. Eine Berechnung auf sämtlichen vorhandenen Daten kann sehr lange
-dauern, dass heißt es gibt keine aktuelle Sicht auf die Daten.
+  Die Abfrage wird als Batch-Verarbeitung ausgeführt und das Ergebnis
+  abgespeichert. Eine Berechnung auf sämtlichen vorhandenen Daten kann sehr lange
+  dauern, dass heißt es gibt keine aktuelle Sicht auf die Daten.
 
-Das Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
-verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
-Realtime Layer und dieser füllt so die entstehende Lücke auf. Kombiniert werden
-die beiden Sichten auf die Daten vom \textit{Serving Layer}.
+  Das Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
+  verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
+  Realtime Layer und dieser füllt so die entstehende Lücke auf. Kombiniert werden
+  die beiden Sichten auf die Daten vom \textit{Serving Layer}.
 
-\subsection{Batch Layer}
-Der Batch-Layer geht davon aus, dass es ok ist, wenn es keine aktuelle Sicht
-auf die Daten gibt und die Berechnungen dadurch entsprechend einfach werden.
-Das heißt der Batch Job läuft, führt seine Berechnungen aus und schreibt das
-Ergebnis in eine Datenbank. Dabei werden schon in der Datenbank bestehende
-Daten vollständig ersetzt. Im Anschluss wird die Neuberechnung angestartet, die
-die in der Zwischenzeit angefallenen Daten mitbetrachtet. Ist diese
-abgeschlossen ersetzt das Ergebnis wieder das vorherige usw.
+  \subsection{Batch Layer}
+  Der Batch-Layer geht davon aus, dass es ok ist, wenn es keine aktuelle Sicht
+  auf die Daten gibt und die Berechnungen dadurch entsprechend einfach werden.
+  Das heißt der Batch Job läuft, führt seine Berechnungen aus und schreibt das
+  Ergebnis in eine Datenbank. Dabei werden schon in der Datenbank bestehende
+  Daten vollständig ersetzt. Im Anschluss wird die Neuberechnung angestartet, die
+  die in der Zwischenzeit angefallenen Daten mitbetrachtet. Ist diese
+  abgeschlossen ersetzt das Ergebnis wieder das vorherige usw.
 
-\subsection{Speed / Realtime Layer}
-Der Speed-Layer füllt die Versorgungslücke, die entsteht, während die
-Berechnungen des Batch-Layers laufen. Das bedeutet der veränderbare Zusatand,
-der aus der Batch-Verarbeitung heraus gehalten wurde und die damit
-einhergehenden inkrementellen Algorithmen befinden sich jetzt im Speed-Layer
-und führen hier die Berechnungen in Echtzeit aus.
+  \subsection{Speed / Realtime Layer}
+  Der Speed-Layer füllt die Versorgungslücke, die entsteht, während die
+  Berechnungen des Batch-Layers laufen. Das bedeutet der veränderbare Zusatand,
+  der aus der Batch-Verarbeitung heraus gehalten wurde und die damit
+  einhergehenden inkrementellen Algorithmen befinden sich jetzt im Speed-Layer
+  und führen hier die Berechnungen in Echtzeit aus.
 
-Die Verschiebung der Komplexität in den Speed-Layer bringt einige Vorteile mit
-sich: Die Daten, die vom Speed-Layer berechnet werden, sind nur so lange
-gültig, wie der Batch-Layer für seine Berechnungen braucht. Das bedeutet ein
-Fehler bei der Datenanalyse kann den Betriebsfluss zwar stören - verschwindet
-aber sobald das Batch-System die Daten in der Datenbank unter Einbeziehung des
-neuen Wertes schreibt.
+  Die Verschiebung der Komplexität in den Speed-Layer bringt einige Vorteile mit
+  sich: Die Daten, die vom Speed-Layer berechnet werden, sind nur so lange
+  gültig, wie der Batch-Layer für seine Berechnungen braucht. Das bedeutet ein
+  Fehler bei der Datenanalyse kann den Betriebsfluss zwar stören - verschwindet
+  aber sobald das Batch-System die Daten in der Datenbank unter Einbeziehung des
+  neuen Wertes schreibt.
 
-An dieser Stelle ist das System auch Fehlern des Entwicklers über toleranter -
-es kann a) ein Fehler bei der Entwicklung der Verarabeitungslogik im
-Batch-Layer programmiert werden, oder b) bei der Entwicklung des Speed-Layers.
+  An dieser Stelle ist das System auch Fehlern des Entwicklers über toleranter -
+  es kann a) ein Fehler bei der Entwicklung der Verarabeitungslogik im
+  Batch-Layer programmiert werden, oder b) bei der Entwicklung des Speed-Layers.
 
-Tritt der Fehler im Batch-Layer auf, so zieht sich der Fehler durch das gesamt
-System und verfälscht die Auswertungen. Da jede Neuberechnung allerdings auf
-sämtlichen historischen Daten basiert (Append-only) kann der Fehler vom
-Entwickler korrigiert werden und die Datenbasis ist nach der Ausbringung der
-Fehlerkorrektur und der nächsten Neuberechnung wieder korrekt. Zukünftige
-Berechnungen des Speed-Layers und Abfragen auf den Datenbestand nutzen die
-korrigiert Version, das heißt es gibt nur temporär eine verfälschte Datenbasis.
+  Tritt der Fehler im Batch-Layer auf, so zieht sich der Fehler durch das gesamt
+  System und verfälscht die Auswertungen. Da jede Neuberechnung allerdings auf
+  sämtlichen historischen Daten basiert (Append-only) kann der Fehler vom
+  Entwickler korrigiert werden und die Datenbasis ist nach der Ausbringung der
+  Fehlerkorrektur und der nächsten Neuberechnung wieder korrekt. Zukünftige
+  Berechnungen des Speed-Layers und Abfragen auf den Datenbestand nutzen die
+  korrigiert Version, das heißt es gibt nur temporär eine verfälschte Datenbasis.
 
-Beim Auftreten eines Fehlers im Speed-Layer, so ist wie oben bereits
-angesprochen, nicht die gesamte Datenbasis vom Fehler beeinflusst, sondern nur
-der Zeitraum, seit die letzte Komplettberechnung des Batch-Layers abgeschlossen
-wurde. Davon ausgehend, dass die Berechnungen auf den Daten im Batch-Layer
-korrekt sind, sind somit die historischen Daten nicht vom Fehler beeinflusst.
+  Beim Auftreten eines Fehlers im Speed-Layer, so ist wie oben bereits
+  angesprochen, nicht die gesamte Datenbasis vom Fehler beeinflusst, sondern nur
+  der Zeitraum, seit die letzte Komplettberechnung des Batch-Layers abgeschlossen
+  wurde. Davon ausgehend, dass die Berechnungen auf den Daten im Batch-Layer
+  korrekt sind, sind somit die historischen Daten nicht vom Fehler beeinflusst.
 
-\subsection{Serving Layer}
-Die eigentliche Komplexität der Lambda-Architektur verbirgt sich hinter dem
-\textit{Serving Layer}. Dieser wird im ursprünglichen Artikel von Nathan Marz
-nicht beschrieben und wurde erstmals XXXX genannt. 
+  \subsection{Serving Layer}
+  Die eigentliche Komplexität der Lambda-Architektur verbirgt sich hinter dem
+  \textit{Serving Layer}. Dieser wird im ursprünglichen Artikel von Nathan Marz
+  nicht beschrieben und wurde erstmals XXXX genannt. 
 
-Der Client des verteilten Systems soll im Optimalfall von der Aufteilung der
-Berechnungen in den Batch-Layer und den Speed-Layer nichts mitbekommen. Das
-heißt er muss eine übergreifende Sicht über beide zum Einsatz kommende
-Datenbanken bekommen und Abfragen müssen die Daten aus beiden Datenbanken
-zusammenfassen.
+  Der Client des verteilten Systems soll im Optimalfall von der Aufteilung der
+  Berechnungen in den Batch-Layer und den Speed-Layer nichts mitbekommen. Das
+  heißt er muss eine übergreifende Sicht über beide zum Einsatz kommende
+  Datenbanken bekommen und Abfragen müssen die Daten aus beiden Datenbanken
+  zusammenfassen.
 
-Die Aufgabe des Serving-Layers ist es, dem Client diese Sicht zur Verfügung zu
-stellen und die Komplexität der Berechnungen im Hintergrund zu verbergen.
+  Die Aufgabe des Serving-Layers ist es, dem Client diese Sicht zur Verfügung zu
+  stellen und die Komplexität der Berechnungen im Hintergrund zu verbergen.
 
-\section{Verarbeitung von Streams}
-Das vorangegangene Kapitel zeigt, dass die Verarbeitung von Batch-Daten der
-Verarbeitung von Streams aufgrund der Komplexität vorzuziehen ist. Beide
-Verfahren können klar voneinander abgegrenzt werden: Bei der Batchverarbeitung
-ist die Größe der Daten bekannt, die Menge der Daten ist endlich und die
-Datenmenge kann „vollständig“ verarbeitet werden.
+  \section{Verarbeitung von Streams}
+  Das vorangegangene Kapitel zeigt, dass die Verarbeitung von Batch-Daten der
+  Verarbeitung von Streams aufgrund der Komplexität vorzuziehen ist. Beide
+  Verfahren können klar voneinander abgegrenzt werden: Bei der Batchverarbeitung
+  ist die Größe der Daten bekannt, die Menge der Daten ist endlich und die
+  Datenmenge kann „vollständig“ verarbeitet werden.
 
-Die Streamverarbeitung betrachtet im Gegensatz dazu die Verarbeitung von Daten,
-die erst während eines zeitlichen Verlaufs verfügbar werden. Statt die Daten,
-wie beim klassischen Data-Warehouse, erst zu indizieren und danach Abfragen auf
-den gespeicherten Daten auszuführen, werden die Daten im laufenden Betrieb mit
-statistischen und mathematischen Methoden analysiert.
+  Die Streamverarbeitung betrachtet im Gegensatz dazu die Verarbeitung von Daten,
+  die erst während eines zeitlichen Verlaufs verfügbar werden. Statt die Daten,
+  wie beim klassischen Data-Warehouse, erst zu indizieren und danach Abfragen auf
+  den gespeicherten Daten auszuführen, werden die Daten im laufenden Betrieb mit
+  statistischen und mathematischen Methoden analysiert.
 
-Der Betrachter der Ergebnisse erhält so in Echtzeit Rückmeldung über ein
-laufendes System und kann aus den ihm so zur Verfügung gestellten Informationen
-Handlungen ableiten.
+  Der Betrachter der Ergebnisse erhält so in Echtzeit Rückmeldung über ein
+  laufendes System und kann aus den ihm so zur Verfügung gestellten Informationen
+  Handlungen ableiten.
+
+  Zusätzlich existiert noch das sogenannte \textit{Micro-Batching}. Hier wird
+  nicht jedes Event / jede Nachricht individuell betrachtet, sondern es werden
+  mehrere Nachrichten gesammelt, um dann Berechnungen über diesen kleinen
+  Datenbestand auszuführen. Die aufprojezierte Zeispanne über welche die Daten zu
+  einem Batch zusammengefasst werden nennt sich \textit{Window}. Im folgenden
+  sind zwei bekannte Windowing-Verfahren theoretisch vorgestellt, das Sliding
+  Window wird im Praxisteil konkret eingesetzt.
+
+  \subsection{Tumbling Window}
+  Ein \textit{Tumbling Window} ist eine Zeitreihe von
+  aufeinanderfolgenden und sich nicht überlappenden Intervallen fixer
+  Größe.
+  \begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}
+       %draw horizontal line   
+      \draw[|->, -latex] (0,0) -- (7,0);
+      \draw[-, dashed] (-1,0) -- (0,0);
+
+       %draw numbers
+      \foreach \x  in {0,...,7} {% 
+        \draw (\x,0) node[below=7pt,anchor=north,xshift=0,rotate=0] {\x}; 
+        \draw[] (\x,-0.1) -- (\x,0.1);
+      }
+      % draw braces
+      \draw[decoration={brace,mirror,raise=0pt},decorate]
+      (0,-1) -- node[below=6pt] {Window 1} (2,-1);
+      \draw[decoration={brace,mirror,raise=0pt},decorate]
+      (2,-1) -- node[below=6pt] {Window 2} (4,-1);
+      \draw[decoration={brace,mirror,raise=0pt},decorate]
+      (4,-1) -- node[below=6pt] {Window 3} (6,-1);
+    \end{tikzpicture}
+  \end{figure}
+
+  \subsection{Sliding Window}
+  Ein Sliding Window erzeugt nur ein Ergebnis, wenn in der
+  betrachteten Zeit tatsächlich ein Ereignis aufgetreten ist. Die
+  Ereignisse können zu mehr als einem Fenster gehören und das Fenster
+  wird kontinuierlich um ein bestimmten Wert nach vorne geschoben.
+  \begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}
+       %draw horizontal line   
+      \draw[|->, -latex] (0,0) -- (7,0);
+      \draw[-, dashed] (-1,0) -- (0,0);
+
+       %draw numbers
+      \foreach \x  in {0,...,7} {% 
+        \draw (\x,0) node[below=7pt,anchor=north,xshift=0,rotate=0] {\x}; 
+        \draw[] (\x,-0.1) -- (\x,0.1);
+      }
+      % draw braces
+      \foreach \x  in {0,...,5} {% 
+        \draw[decoration={brace,mirror,raise=0pt},decorate]
+        (\x,-\x/3-1) -- node[below=6pt] {} (\x+2,-\x/3-1);
+      }
+      \draw (6,-3) node {Window $n$};
+    \end{tikzpicture}
+  \end{figure}
+
+% TODO Event / Nachricht definieren
 
 % TODO Wo kommen diese Informationen her? Message Broker: AMQP/JMS-Style Broker
 % vs. Log-Based-Message Broker
 
-Zur Analyse von Datenströmen in Echtzeit gibt es eine Vielzahl an Frameworks,
-im Folgenden werden die OpenSource-Frameworks Apache Storm, Apache
-Spark-Streaming und Apache Kafka kurz vorgestellt und miteinander verglichen.
+  Zur Analyse von Datenströmen in Echtzeit gibt es eine Vielzahl an Frameworks,
+  im Folgenden werden die OpenSource-Frameworks Apache Storm, Apache
+  Spark-Streaming und Apache Kafka kurz vorgestellt und miteinander verglichen.
 
 % TODO Wieso diese Frameworks? => Open Source, können problemlos verprobt
 % werden
@@ -271,16 +335,16 @@ Spark-Streaming und Apache Kafka kurz vorgestellt und miteinander verglichen.
 % TODO Windowing Methoden
 % TODO Avro / Serialisierung von Nachrichten
 
-\subsection{Apache Storm}
-\subsection{Apache Spark-Streaming}
-\subsection{Apache Kafka}
+  \subsection{Apache Storm}
+  \subsection{Apache Spark-Streaming}
+  \subsection{Apache Kafka}
 
-\section{Echtzeitanalyse von Tastatureingaben}
+  \section{Echtzeitanalyse von Tastatureingaben}
 
 % TODO Architekturschaubild
 % TODO Zusammenarbeit jQuery, rest-Framework, Kafka, Storm
 
-\section{Zusammenfassung / Fazit}
+  \section{Zusammenfassung / Fazit}
 
 
-\end{document}
+  \end{document}
