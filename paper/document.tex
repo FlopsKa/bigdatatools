@@ -59,11 +59,47 @@ letzten 10 Sekunden? Sind aktuell Besucher auf der Seite? Über
 Stream-Verarbeitung können diese Daten in Echzeit analysiert und die Ergebnisse
 betrachtet werden.
 
+Weitere Einsatzgebiete sind zum Beispiel:
+\begin{description}
+  \item[Analyse von Sensordaten] Dies kann zum Beispiel durch die Sensorik im
+    Auto illustriert werden: Die Werte verschiedener Sensoren zum Beispiel
+    Beschleunigungssensor, Geschwindigkeitssensor und Abstandssensor, werden in
+    Echtzeit zusammengeführt.
+  \item[IoT Devices] Mit der zunehmenden Verbreitung von IoT Devices nimmt auch
+    hier die eh schon sehr hohe Datenmenge zu: An eine zentrale Stelle werden
+    verschiedene Events von unterschiedlichen Geräten gemeldet, zum Beispiel
+    die Helligkeit des Raumes, ob sich eine Person in einem Raum befindet und
+    die aktuelle Raumtemperatur.
+  \item[Fraud Detection] In Echtzeit soll für Überweisungen geprüft werden, ob
+    diese vom eigentlichen Bankkunden ausgeführt wurde, oder ob ein Betrüger
+    diese im Namen des Kunden initiiert hat. Überweisungen, die der Kunde nicht
+    selbst (oder unbewusst) in Auftrag gegeben hat, sollen aufgehalten werden.
+  \item[Complex Event Processing] Beim Complex Event Processing wird in einem
+    Datenstrom nach vorher festgelegten Mustern gesucht. Das bedeutet der
+    Anwender legt Abfragen (ähnlich zu SQL) fest und der Stream wird
+    kontinuierlich auf das Auftreten der definierten Muster geprüft.
+  \item[High Speed Trading] Abhängig von Schwankungen der Aktien einer Börse
+    sollen passende Wertpapiere gekauft oder verkauft werden, um den eigenen
+    Gewinn zu maximieren. Im Optimalfall finden die Aktionen schneller statt,
+    als die Konkurrenz diese ausführen kann.
+  \item[Klickstreamanalyse] Der Bewegungspfad des Besuchers einer Webseite wird
+    aufgezeichnet und analysiert. Abhängig vom Verhalten des Nutzers kann
+    dieser zum Beispiel klassifiziert werden und es wird passende Werbung
+    gezeigt.
+\end{description}
+
+Alle Einsatzgebiete haben gemeinsam, dass es sich um „Echtzeitsysteme“ handelt:
+Aus den anfallenden Daten sollen möglichst schnell Informationen gewonnen
+werden. Oft ist es sogar so, dass die Qualität der Informationen, die aus den
+Daten gewonnen werden können, bei längerer Verarbeitungsdauer abnimmt.
+
 Die vorliegende Arbeit gibt einen allgemeinen Einblick in die Verarbeitung von
-Big Data mit dem Hadoop Framework und zeigt im Anschluss detailliert die
-Möglichkeiten der Verarbeitung von Streams.
+Streams und zeigt im Anschluss detailliert die Möglichkeiten der Verarbeitung
+von Streams mit dem Apache Storm Framework.
 
 % TODO Kapitelbeschreibung
+
+
 
 \section{Datenhaltung bei Big Data}
 Die Verarbeitung von den in der Einleitung beschriebenen Datenmengen bringt
