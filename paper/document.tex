@@ -165,11 +165,14 @@
 % TODO Graphik vom CAP-Theorem
 
   \section{Lambda Architektur}
-  Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat the
-  CAP-Theorem“ vorgestellt und beruht auf der Beobachtung, dass sich die
-  Komplexität in verteilten Systemen aus dem veränderlichen Zustand in
-  Datenbanken („mutable state“) und der Nutzung von inkrementellen Algorithmen
-  zur Manipulation dieses Zustands ergibt.
+  Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How
+  to beat the CAP-Theorem“ vorgestellt und beruht auf der Beobachtung,
+  dass sich die Komplexität in verteilten Systemen aus dem
+  veränderlichen Zustand in Datenbanken („mutable state“) und der
+  Nutzung von inkrementellen Algorithmen zur Manipulation dieses
+  Zustands ergibt.  Der Name leitet sich aus dem Lambda-Kalkül als
+  Grundlage der funktionalen Programmierung ab: Berechnungen im
+  Batch-Layer werden nur auf unveränderlichen Daten ausgeführt.
 
   Der Autor wirft die Frage auf, wie ein System aussehen würde, dass als
   Kernkomponente eine Append-Only-Datenbank verwendet - das heißt der Zustand
@@ -187,6 +190,13 @@
   verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
   Realtime Layer und dieser füllt so die entstehende Lücke auf. Kombiniert werden
   die beiden Sichten auf die Daten vom \textit{Serving Layer}.
+
+  \begin{figure}[h]
+    \center
+    \scalebox{.7}{\input{../presentation/tikz/lambda.tex}}
+    \caption{Schematische Darstellung der Lambda-Architektur}
+    \label{fig:lambdaarch}
+  \end{figure}
 
   \subsection{Batch Layer}
   Der Batch-Layer geht davon aus, dass es ok ist, wenn es keine aktuelle Sicht
@@ -292,7 +302,17 @@
       \draw[decoration={brace,mirror,raise=0pt},decorate]
       (4,-1) -- node[below=6pt] {Window 3} (6,-1);
     \end{tikzpicture}
+    \caption{Schematische Darstellung eines Tumbling Window}
   \end{figure}
+
+  Interpretiert man die im Schaubild dargestellten Intervalle als
+  Sekunden, so werden alle Ereignisse von Sekunde 0 bis Sekunde 2
+  zusammengefasst, und im Anschluss als Ergebnis geliefert. Im
+  Anschluss werden die Ereignisse von Sekunde 2 bis Sekunde 4
+  zusammengefasst usw. Das Ergebnis ist immer das des letzten
+  abgeschlossenen Intervalls. Jedes Ereignis wird nur einmal
+  betrachtet. Das bedeutet, dass jedes Ergebnis maximal 2 Sekunden
+  veraltet sein kann.
 
   \subsection{Sliding Window}
   Ein Sliding Window erzeugt nur ein Ergebnis, wenn in der
@@ -318,7 +338,15 @@
       }
       \draw (6,-3) node {Window $n$};
     \end{tikzpicture}
+    \caption{Schematische Darstellung eines Sliding Window}
   \end{figure}
+
+  Im Schaubild ist zu sehen, wie das Betrachtungsfenster mit der Zeit
+  wandert, die einzelnen Fenster überschneiden sich. So kann ein
+  Ereignis verschiedenen Fenstern zugeordnet werden. Das bedeutet, es
+  wird immer eine aktuelle Sicht auf das Ergebnis präsentiert. Auch
+  hier muss festgelegt werden, wie häufig das Ergebnis aktualisiert
+  werden soll - es gibt also auch eine geringe Latenz.
 
 % TODO Event / Nachricht definieren
 
