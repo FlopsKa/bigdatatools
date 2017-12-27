@@ -99,8 +99,6 @@ von Streams mit dem Apache Storm Framework.
 
 % TODO Kapitelbeschreibung
 
-
-
 \section{Datenhaltung bei Big Data}
 Die Verarbeitung von den in der Einleitung beschriebenen Datenmengen bringt
 eine Menge an Herausforderungen mit sich: Ein einzelner Rechner ist zu schwach,
@@ -243,78 +241,18 @@ zusammenfassen.
 Die Aufgabe des Serving-Layers ist es, dem Client diese Sicht zur Verfügung zu
 stellen und die Komplexität der Berechnungen im Hintergrund zu verbergen.
 
-\section{Hadoop Kernkomponenten}
-Das Hadoop Projekt bietet mittlerweile ein ganzes „Ökosystem“ an Anwendungen
-für die Datenhaltung und die Datenanalyse. Ursprünglich wurden unter dem
-Hadoop-Begriff die verteilte Speicherschicht HDFS und die verteilte
-Rechenschicht MapReduce zusammengefasst. Diese bilden noch immer die Basis des
-Anwendungsstacks und die strukturelle Umsetzung der beiden Komponenten wird im
-Folgenden aufgezeigt.
-
-\subsection{Hadoop Filesystem}
-
-Das Hadoop Filesystem oder \textit{HDFS} (Hadoop Distributed Filesystem)
-betrachtet allen im Cluster verfügbaren Speicherplatz als ein großes logisches
-Volumen. Die Anwendung schreibt Daten nicht direkt auf einen Rechner, sondern
-nutzt das von HDFS bereitgestellte Interface zur Ablage von Dateien. Auf
-welchem Rechner eine Datei konkret abgelegt wird, entscheidet das verteilte
-Dateisystem.
-
-Die Daten werden dabei abhängig von der Konfiguration nicht nur auf einem
-Knoten abgelegt, sondern redundant auf mehreren Knoten vorgehalten. Fällt ein
-Knoten aus, so kann die Datei von einem anderen Knoten gelesen werden.
-
-% TODO Standardkonfiguration 3-Fach -  für Schutz vor Server, Rack,
-% Netzausfällen, Lesefehlern.
-
-Um dieses Prinzip umzusetzen nutzt HDFS das Master-Slave-Prinzip: Der Master im
-Cluster speichert, welche Daten auf welchen Slaves vorgehalten werden. Soll auf
-eine Datei zugegriffen werden, geht zuerst eine Anfrage an den Master, um
-herauszufinden, auf welchem Knoten sich die Datei aktuell befindet. Im
-Anschluss wird die Datei direkt von dort abgerufen.
-
-Ist ein Knoten für den Master nicht mehr erreichbar, so kümmert sich dieser
-auch darum, dass nun nicht mehr ausreichend replizierte Daten wieder auf andere
-Knoten gespiegelt werden. Da der Master in dieser Konfiguration einen
-\textit{single-point-of-failure} darstellt bietet HDFS zusätzlich eine
-High-Availability Konfiguration, bei der $n$ Master ($n \geq 2$) vorgehalten
-werden. Beim Ausfall des aktuell aktiven Masters kann auf einen anderen Master
-umgeschwenkt werden.
-
-% TODO Namenode / Datanode
-
-\subsection{MapReduce Framework}
-Das MapReduce Framework bietet dem Entwickler eine klar definierte
-Schnittstelle für das verteilte Rechnen. Die auf dem MapReduce Framework
-aufsetzenden Algorithmen laufen in 3 Phasen ab. Diese sind schematisch in der
-folgenden Abbildung dargestellt.
-
-\begin{enumerate}
-  \item Map-Phase
-  \item Group- / Shuffle-Phase
-  \item Reduce-Phase
-\end{enumerate}
-
-Die Eingabe des Algorithmus besteht aus Schlüssel- und Werte-Paaren
-$(K_1,V_1)$. Der Map-Schritt übersetzt diese in eine Menge von neuen Schlüssel-
-und Werte-Paaren $(K_2,V_2)$. Der zweite Schritt, der Group- oder
-Shuffle-Schritt, fasst Paare mit dem gleichen Schlüssel zu $(K_2,
-\{V_2,V_2,\ldots,V_2\})$ zusammen. Im letzten Schritt, dem Reduce-Schritt,
-werden die verschiedenen Werte kombiniert. Daraus ergibt sich $(K_3,V_3)$.
-
-Die Vorteile dieser Aufteilung sind die Möglichkeit der automatischen
-Parallelisierung, eine hohe Fehlertoleranz und ein einfaches Verteilen der
-verschiedenen Rechenschritte. Das Map-Reduce-Paradigma wird für die
-Batch-Verarbeitung genutzt.
-
 \section{Verarbeitung von Streams}
-Die Verarbeitung von Streams geht davon aus, dass neu anfallende Daten in
-Echtzeit analysiert und bewertet werden müssen. Dies können zum Beispiel
-Sensordaten, Klick-Daten einer Webseite, Transaktionen eines Banksystems oder
-Events in einem Rechenzentrum sein. Statt die Daten, wie beim klassischen
-Data-Warehouse, erst zu indizieren und danach Abfragen auf den gespeicherten
-Daten auszuführen, werden die Daten im laufenden Betrieb mit statistischen und
-mathematischen Methoden analysiert.
+Das vorangegangene Kapitel zeigt, dass die Verarbeitung von Batch-Daten der
+Verarbeitung von Streams aufgrund der Komplexität vorzuziehen ist. Beide
+Verfahren können klar voneinander abgegrenzt werden: Bei der Batchverarbeitung
+ist die Größe der Daten bekannt, die Menge der Daten ist endlich und die
+Datenmenge kann „vollständig“ verarbeitet werden.
+
+Die Streamverarbeitung betrachtet im Gegensatz dazu die Verarbeitung von Daten,
+die erst während eines zeitlichen Verlaufs verfügbar werden. Statt die Daten,
+wie beim klassischen Data-Warehouse, erst zu indizieren und danach Abfragen auf
+den gespeicherten Daten auszuführen, werden die Daten im laufenden Betrieb mit
+statistischen und mathematischen Methoden analysiert.
 
 Der Betrachter der Ergebnisse erhält so in Echtzeit Rückmeldung über ein
 laufendes System und kann aus den ihm so zur Verfügung gestellten Informationen
