@@ -3,7 +3,13 @@
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usepackage{amsmath}
+\usepackage{listings}
 \usetikzlibrary{shapes,decorations.pathreplacing,angles,quotes}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
 \begin{document}
 
 \title{Analyzing Big Data Streams}
@@ -353,19 +359,72 @@
 % TODO Wo kommen diese Informationen her? Message Broker: AMQP/JMS-Style Broker
 % vs. Log-Based-Message Broker
 
-  Zur Analyse von Datenströmen in Echtzeit gibt es eine Vielzahl an Frameworks,
-  im Folgenden werden die OpenSource-Frameworks Apache Storm, Apache
-  Spark-Streaming und Apache Kafka kurz vorgestellt und miteinander verglichen.
-
 % TODO Wieso diese Frameworks? => Open Source, können problemlos verprobt
 % werden
 
-% TODO Windowing Methoden
 % TODO Avro / Serialisierung von Nachrichten
 
-  \subsection{Apache Storm}
-  \subsection{Apache Spark-Streaming}
-  \subsection{Apache Kafka}
+  \section{Apache Storm}
+
+  \subsection{Storm Komponenten}
+  \paragraph{Tuple}
+  \begin{quote}
+    Ein Tupel besteht aus einer Liste endlich vieler, nicht notwendigerweise voneinander verschiedener Objekte.
+  \end{quote}
+  \setlength{\abovedisplayskip}{-20pt}
+  \setlength{\abovedisplayshortskip}{-20pt}
+
+  \begin{align*}
+    (x_1, \ldots , x_n)
+  \end{align*}
+
+  \paragraph{Stream}
+  \begin{quote}
+    [\ldots] einen kontinuierlichen Fluss von Datensätzen, dessen Ende meist nicht im Voraus abzusehen ist; die Datensätze werden fortlaufend verarbeitet, sobald jeweils ein neuer Datensatz eingetroffen ist.
+  \end{quote}
+
+  \begin{align*}
+    (x_1, \ldots , x_n)
+    (x_1, \ldots , x_n)
+    (x_1, \ldots , x_n)
+    (x_1, \ldots , x_n)
+  \end{align*}
+  \begin{figure}[!h]
+    \centering
+    \vspace*{-1cm}
+    \begin{tikzpicture}
+       %draw horizontal line   
+      \draw[|->, -latex] (0,0) -- (7,0);
+    \end{tikzpicture}
+  \end{figure}
+  \paragraph{Spout}
+  \paragraph{Bolt}
+
+  Im Bolt findet die tatsächliche Verarbeitung statt.
+  \begin{lstlisting}
+  void execute(Tuple input, BasicOutputCollector collector)
+  {
+    /* do some magic stuff here, e.g:
+    * - count words
+    * - write to database
+    * - combine data
+    */
+    ...
+  }
+  \end{lstlisting}
+  \paragraph{Topologie}
+  \begin{figure}[!h]
+    \center
+    \scalebox{.7}{\input{../presentation/tikz/topology.tex}}
+    \caption{Schematischer Aufbau einer Storm-Topologie}
+    \label{fig:topology}
+  \end{figure}
+
+  \subsection{Guaranteed-Message-Processing}
+  \paragraph{At-least-once-Semantik}
+  \paragraph{Exactly-once-Semantik}
+
+  \subsection{Apache Storm Trident} 
 
   \section{Echtzeitanalyse von Tastatureingaben}
 
