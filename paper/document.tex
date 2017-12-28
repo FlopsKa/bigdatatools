@@ -455,9 +455,17 @@
   % TODO Wie funktioniert das GMP?
 
   \paragraph{Bolt}
+  Die eigentliche Verabeitungslogik für die Streamverarbeitung mit
+  Storm wird in sogenannten Bolts realisiert. Der Bolt hat dazu eine
+  \textit{execute(\ldots)}-Methode, diese wird vom Framework für jedes
+  Tupel einzeln aufgerufen. Das Framework setzt die beiden Parameter
+  \textit{input} und \textit{collector}. \textit{Input} ist das zu
+  verarbeitende Tupel und über den \textit{collector} kann die
+  Nachricht an einen anderen Bolt weitergegeben werden. Die
+  Kombination verschiedener Spouts und Bolts ist im Folgenden Kapitel
+  beschrieben.
 
-  Im Bolt findet die tatsächliche Verarbeitung statt.
-  \begin{lstlisting}
+  \begin{lstlisting}[caption={Methodensignatur einer Bolt-Implementierung}]
 void execute(Tuple input, BasicOutputCollector collector)
 {
   /* do some magic stuff here, e.g:
@@ -468,13 +476,34 @@ void execute(Tuple input, BasicOutputCollector collector)
   ...
 }
   \end{lstlisting}
+
+  In der \textit{execute}-Methode kann der Entwickler unabhängig vom
+  Framework die Anwendungslogik realisieren. Hier ist zu beachten,
+  dass der die Bolt-Klasse vor der Nutzung serialisiert und auf die
+  Knoten des verteilten Systems transferiert wird: Es ist daher nicht
+  möglich im Konstrukter nicht serialisierbare Objekte zu instantieren.
+  Werden solche benötigt, so muss die Instantierung in der
+  \textit{prepare(\ldots)}-Methode erfolgen. Diese wird auch vom
+  Framework aufgerufen.
+
   \paragraph{Topologie}
+  Die \textit{Topologie} bezeichnet den Zusammenschluss verschieder
+  Spouts und Bolts in ein Gesamtkonstrukt von welchem die Streams
+  verarbeitet werden. Spouts können dabei ihre Nachrichten an ein oder
+  mehrere Bolts senden und diese können äquivalent neue Nachrichten
+  erzeugen und weitergeben oder erhaltene Nachrichten als letzter
+  Knoten des Graphs abschließend verarbeiten.
   \begin{figure}[!h]
     \center
     \scalebox{.7}{\input{../presentation/tikz/topology.tex}}
     \caption{Schematischer Aufbau einer Storm-Topologie}
     \label{fig:topology}
   \end{figure}
+  Im Schaubild sind zwei Spouts dargestellt, die die Nachrichten an
+  drei beziehungsweise einen Bolt weitergeben. Innerhalb der Bolts
+  findet eine Verarbeitung statt, bevor eine neue Nachricht an den
+  hinteren Bolt gesendet wird. Hier ist zum Beispiel denkbar, dass
+  Ergebnisse in einer Datenbank persistiert werden.
 
   \subsection{Guaranteed-Message-Processing}
   \paragraph{At-least-once-Semantik}
