@@ -293,13 +293,15 @@
   laufendes System und kann aus den ihm so zur Verfügung gestellten Informationen
   Handlungen ableiten.
 
-  Zusätzlich existiert noch das sogenannte \textit{Micro-Batching}. Hier wird
-  nicht jedes Event / jede Nachricht individuell betrachtet, sondern es werden
-  mehrere Nachrichten gesammelt, um dann Berechnungen über diesen kleinen
-  Datenbestand auszuführen. Die aufprojezierte Zeispanne über welche die Daten zu
-  einem Batch zusammengefasst werden nennt sich \textit{Window}. Im folgenden
-  sind zwei bekannte Windowing-Verfahren theoretisch vorgestellt, das Sliding
-  Window wird im Praxisteil konkret eingesetzt.
+  Zusätzlich existiert noch das sogenannte \textit{Micro-Batching}.
+  Hier wird nicht jedes Event / jede Nachricht individuell betrachtet,
+  sondern es werden mehrere Nachrichten gesammelt, um dann
+  Berechnungen über diesen kleinen Datenbestand auszuführen. Die
+  aufprojezierte Zeispanne über welche die Daten zu einem Batch
+  zusammengefasst werden nennt sich \textit{Window}. Im folgenden sind
+  zwei bekannte Windowing-Verfahren theoretisch vorgestellt, das
+  ebenfalls vorgestellte Sliding-Window-Verfahren wird im Praxisteil
+  konkret eingesetzt.
 
   \subsection{Tumbling Window}
   Ein \textit{Tumbling Window} ist eine Zeitreihe von
@@ -592,9 +594,84 @@ void execute(Tuple input, BasicOutputCollector collector)
   \end{description}
 
   \section{Echtzeitanalyse von Tastatureingaben}
+  Die vorgestellten Konzepte und der Einsatz des Apache Storm
+  Frameworks soll anhand eines kleinen Beispiels praktisch illustriert
+  werden.
 
-% TODO Architekturschaubild
-% TODO Zusammenarbeit jQuery, rest-Framework, Kafka, Storm
+  Das klassische Beispiel für die Demonstration der Big Data
+  Verarbeitung ist der \textit{Word Count}. Hier wird in einer oder
+  mehreren Textdateien die Häufigkeit des Vorkommens jedes Wortes
+  gezählt. Mittlerweile gilt dieses Beispiel als das \textit{Hello
+  World} von Big Data.
+
+  Dieses Beispiel erfordert keine Echtzeitverarbeitung und ist somit
+  für die Verprobung der Stream Verarbeitung nicht geeignet. Statt die
+  Wörter statisch aus einer Textdatei zu verarbeiten werden die Wörter
+  daher vom Nutzer entsprechend der Aufforderung eingegeben, um die
+  Tippgeschwindigkeit des Anwenders festzustellen.
+
+  \begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4,natwidth=750,natheight=234]{../presentation/img/webapp.png}
+    \caption{Erzeugen eines Wort-Streams\hspace{\linewidth}Screenshot von http://github.com/flopska/bigdatatools/}
+  \end{figure}
+
+  Die Eingabe erfolgt über eine in HTML und JavaScript geschriebene
+  WebApp. Diese präsentiert dem Nutzer eine Liste von Wörtern und
+  darunter ein Eingabefeld in welches das aktuell hervorgehobene Wort
+  eingegeben werden soll. Schreibt der Nutzer das Wort richtig, so
+  färbt es sich grün. Bei einem Fehler wird das Wort rot dargestellt.
+  Das Betätigen der Leertaste bewegt die Hervorhebung zum nächsten
+  Wort und löscht den Inhalt des Eingabefeldes.
+
+  Jedes korrekt eingegebene Wort wird über einen Ajax-Aufruf an eine
+  REST-Schnittstelle geschickt und dann serverseitig weiter
+  verarbeitet.
+
+  \begin{figure}[!h]
+    \center
+    \scalebox{.7}{\input{../presentation/tikz/architecture.tex}}
+    \caption{Architektur des Word Count Beispiels}
+    \label{fig:wordcountsamplearchitecture}
+  \end{figure}
+
+  Die REST-Schnittstelle nimmt die Nachricht entgegen und schreibt
+  diese in einen Kafka-Topic. Von dort wird die Nachricht von Storm
+  weiter verarbeitet. Diese Architektur ist im obigen Schaubild
+  schematisch dargestellt.
+
+  Die Schnittstelle wurde nichts selbst entwickelt, sondern hier kommt
+  die Schnittstelle aus der \textit{confluent}-Distribution zum
+  Einsatz.
+
+  % TODO Wieso confluent?
+
+  Da jede Nachricht nur ein einziges Mal verarbeitet werden soll, wird
+  für die tatsächliche Verarbeitung Storm Trident eingesetzt. Für ein
+  Sliding Window mit der Länge von 10 Sekunden wird die Zahl der
+  eingegebenen Wörter gezählt. Aktualisiert wird der ausgegebene
+  Zähler jede Sekunde.
+
+  \begin{lstlisting}[caption={Beispielimplementierung zur Ermittlung der Tippgeschwindigkeit}]
+  public static void main(String[] args) {
+    TridentTopology topology = new TridentTopology();
+    BrokerHosts zk = new ZkHosts("localhost");
+    TridentKafkaConfig spoutConf = new TridentKafkaConfig(zk, "words");
+    spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
+    OpaqueTridentKafkaSpout spout = new OpaqueTridentKafkaSpout(spoutConf);
+    WindowsStoreFactory mapState = new InMemoryWindowsStoreFactory();
+
+    SlidingDurationWindow windowConfig = SlidingDurationWindow.of(
+    new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS),
+    new BaseWindowedBolt.Duration(1, TimeUnit.SECONDS));
+    topology.newStream("words", spout)
+    .window(windowConfig, mapState, new Fields("str"), new CountAsAggregator(), new Fields("count"))
+    .filter(new Debug());
+
+    LocalCluster cluster = new LocalCluster("localhost", 2181L);
+    cluster.submitTopology("localCluster2", new Config(), topology.build());
+  }
+  \end{lstlisting}
 
   \section{Zusammenfassung / Fazit}
 
