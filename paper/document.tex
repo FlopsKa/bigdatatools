@@ -493,12 +493,14 @@ void execute(Tuple input, BasicOutputCollector collector)
   mehrere Bolts senden und diese können äquivalent neue Nachrichten
   erzeugen und weitergeben oder erhaltene Nachrichten als letzter
   Knoten des Graphs abschließend verarbeiten.
+
   \begin{figure}[!h]
     \center
     \scalebox{.7}{\input{../presentation/tikz/topology.tex}}
     \caption{Schematischer Aufbau einer Storm-Topologie}
     \label{fig:topology}
   \end{figure}
+
   Im Schaubild sind zwei Spouts dargestellt, die die Nachrichten an
   drei beziehungsweise einen Bolt weitergeben. Innerhalb der Bolts
   findet eine Verarbeitung statt, bevor eine neue Nachricht an den
@@ -506,7 +508,29 @@ void execute(Tuple input, BasicOutputCollector collector)
   Ergebnisse in einer Datenbank persistiert werden.
 
   \subsection{Guaranteed-Message-Processing}
+  Die Verantwortung, dass Nachrichten nicht verworfen werden, bevor
+  diese vollständig verarbeitet sind liegt beim Sender der Nachricht,
+  das heißt, dass der Spout überwachen muss welche der von ihm
+  gesendeten Nachrichten fertig verarbeitet wurden. Während der
+  verschiedenen Verarbeitungsschritte innerhalb der Topologie bildet
+  sich ein sogenannter „Tupel-Baum“. Es wird nicht immer das gleiche
+  Tupel verarbeitet, sondern die jeweiligen Bolts erzeugen ein neues
+  Tupel, welches auf dem Empfangenen basiert. Schlägt die Verarbeitung
+  eines dieser Tupel fehl, so muss das Ursprungstupel noch einmal
+  gesendet werden.
+
   \paragraph{At-least-once-Semantik}
+  Das im vorhergehenden Paragraphen beschriebene Vorgehen stellt
+  sicher, dass eine Nachricht mindestens einmal korrekt verarbeitet
+  wird. Der Ausfall eines Knotens beziehungsweise ein technischer
+  Fehler kann dafür Sorgen, dass ein Tupel nicht vollständig
+  verarbeitet wird und damit neu gesendet wird. Haben basierend auf
+  diesem Tupel bereits Berechnungen stattgefunden, die an einer Stelle
+  persistiert wurden, so wird nun unter Umständen das Ergebnis
+  verfälscht. Storm garantiert hier, dass die Nachricht auf jeden Fall
+  einmal verarbeitet wird - im Fehlerfall kann es aber vorkommen, dass
+  die Nachricht mehrfach verarbeitet wird.
+
   \paragraph{Exactly-once-Semantik}
 
   \subsection{Apache Storm Trident} 
