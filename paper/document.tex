@@ -532,8 +532,64 @@ void execute(Tuple input, BasicOutputCollector collector)
   die Nachricht mehrfach verarbeitet wird.
 
   \paragraph{Exactly-once-Semantik}
+  In bestimmten Szenarien soll sichergestellt sein, dass Nachrichten
+  auch im Fehlerfall nur genau einmal (\textit{exactly-once})
+  verarbeitet werden und die darauf ausgeführten Berechnungen damit
+  unabhängig von eventuellen Ausfällen oder auftretenden Fehlern sind.
+  Die Exactly-Once-Semantik gewährleistet dies. Eine entsprechende 
 
   \subsection{Apache Storm Trident} 
+  Soll mit Storm eine Exactly-Once-Verarbeitung realisiert werden,
+  kann dafür das Apache Storm Trident Framework genutzt werden. Statt
+  wie in regulären Bolts jedes Tupel einzeln zu verarbeiten werden
+  hier verschiedene Tupel zu sogenannten Micro-Batches
+  zusammengefasst. Die Reihenfolge der Verarbeitung der Micro-Batches
+  ist strikt sortiert, das heißt es wird erst ein Batch fertig
+  verarbeitet, bevor mit der Verarbeitung des folgenden Batches
+  angefangen wird.
+
+  Trident bringt für die Verarbeitung der Streams vorgefertigte
+  Operationen mit. Es können Merges und Joins, Aggregationen,
+  Gruppierungen, Funktionen und Filter auf die jeweiligen Stream
+  angewendet werden.
+
+  Die Exactly-Once-Verarbeitung kann durch den Spout konfiguriert
+  werden. Erreicht wird dies durch das Mitführen von State, wenn Daten
+  aggregiert werden. Unterschieden wird zwischen den Folgenden:
+
+  \begin{description}
+    \item[Transactional] In jedem erneut gesendeten Batch sind genau
+      die Tupel, die vorher auch im Batch waren. Fällt ein Teil des
+      Zuliefersystems aus, zum Beispiel Apache Kafka, kann nicht
+      weitergearbeitet werden, da der passende Batch nicht wieder
+      geschickt werden kann.
+
+      Bei der Speicherung von Werten wird neben dem eigentlichen Wert
+      zusätzlich die ID des Batches gespeichert, der diese Änderung
+      ausgelöst hat. Da die Batches sortiert sind (die ID steigt immer
+      an) lässt sich so vor der Änderung eines Wertes feststellen, ob
+      dieser bereits für den akutellen Batch angepasst wurde oder ob
+      der Batch neuer ist.
+    \item[Opaque Transactional]
+      Dieser Spout gewährleistet, dass jedes Tupel in genau einem
+      Batch erfolgreich verarbeitet wird und trifft keine Aussage über
+      die Beschaffenheit der Batches. Das bedeutet, dass das
+      Fehlschlagen der Verarbeitung eines Tupels dazu führt, dass das
+      Tupel im Anschluss in einem anderen Batch nochmal geschickt
+      wird.
+
+      Da nun keine Aussage mehr über eine bereits stattgefundene
+      Verarbeitung über die Batch-ID getroffen werden kann muss
+      zusätzlich ein weiterer Zustand gespeichert werden. Neben dem
+      eigentlichen Wert wird daher auch der vorherige Wert und die
+      Transaktions-ID gespeichert.
+    \item[Non-Transactional]
+      Diese Art von Spout trifft keine Aussagen über die Inhalte eines
+      Batches. Das bedeutet es kann sowohl eine At-Most-Once-Semantik
+      (Fehler werden ignoriert, Tupel gehen verloren) als aus
+      At-Least-Once-Sematik erreicht werden. Eine
+      Exactly-Once-Verarbeitung ist nicht möglich.
+  \end{description}
 
   \section{Echtzeitanalyse von Tastatureingaben}
 
