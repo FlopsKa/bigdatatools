@@ -18,7 +18,7 @@
   showstringspaces=false,
   columns=flexible,
   basicstyle={\small\ttfamily},
-  numbers=none,
+  numbers=left,
   numberstyle=\tiny\color{gray},
   keywordstyle=\color{blue},
   commentstyle=\color{dkgreen},
@@ -36,9 +36,9 @@
   \date{November 2017}
   \maketitle
 
-  \begin{abstract}
-    Das ist die Kurzfassung.
-  \end{abstract}
+  %\begin{abstract}
+    %Das ist die Kurzfassung.
+  %\end{abstract}
 
   \tableofcontents
 
@@ -182,9 +182,20 @@
       verlorenen oder verzögerten Netzwerkpakete.
   \end{description}
 
-  Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
+  Graphisch wird das CAP-Theorem häufig als Dreieckt dargestellt, eine konkrete
+  Anwendung liegt dabei auf einer der Kanten:
 
-% TODO Graphik vom CAP-Theorem
+  \begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}
+      \draw [line width=0.4mm]
+      (0,0) node[anchor=north]{\textbf{Verfügbarkeit}}
+      -- (4,0) node[anchor=north]{\textbf{Partitionstoleranz}}
+      -- (2,3) node[anchor=south]{\textbf{Konsistenz}}
+      -- cycle;
+    \end{tikzpicture}
+    \caption{Veranschaulichung des CAP-Theorems}
+  \end{figure}
 
   \section{Lambda Architektur}
   Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat
@@ -678,6 +689,5 @@
   \section{Zusammenfassung / Fazit}
   \bibliography{bib}
   \bibliographystyle{alpha}
-
 
   \end{document}
