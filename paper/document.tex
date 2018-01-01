@@ -4,6 +4,7 @@
 \usepackage{tikz}
 \usepackage{amsmath}
 \usepackage{listings}
+\usepackage{url}
 \usetikzlibrary{shapes,decorations.pathreplacing,angles,quotes}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -48,7 +49,8 @@
   Entscheidungen getroffen werden, um dem Unternehmen so einen wirtschaftlichen
   Vorteil zu ermöglichen. Historisch gesehen ist dieses Vorgehen bereits
   etabliert - die zu analysierende Datenmenge steigt allerdings stark an und
-  schafft so neue Herausforderungen bei der Analyse der Daten.
+  schafft so neue Herausforderungen bei der Analyse der
+  Daten.\cite[S.~1]{freiknecht2014}
 
   Obwohl nicht genau definiert ist, ab wann es sich bei der Datenverarbeitung um
   \textit{Big Data} handelt, hat sich die folgende Definition durchgesetzt:
@@ -56,7 +58,8 @@
   Datenmengen, die zu groß, zu komplex oder zu schnelllebig sind, um sie mit
   traditionellen Methoden der Datenhaltung zu speichern und auszuwerten werden
   als Big Data bezeichnet. Diese Einordnung geht davon aus, dass die Daten einem
-  oder mehreren der 3 „V“s entsprechen:
+  oder mehreren der 3 „V“s entsprechen:\footnote{frei übersetzt nach Hilbert,
+  M. (2012)}
   \begin{description}
     \item[Volume] Die Datenmengen sind im Tera-, Peta- oder Exabytebereich.
     \item[Velocity] Die Daten müssen in Echtzeit verarbeitet und analysiert
@@ -71,7 +74,7 @@
   dass die Größe der Daten bekannt und endlich ist. Die Datenmenge kann
   „vollständig“ verarbeitet werden. Im Gegensatz dazu betrachtet die
   Stream-Verarbeitung die Verarbeitung von Daten, die erst während eines
-  zeitlichen Verlaufs verfügbar werden.
+  zeitlichen Verlaufs verfügbar werden.\cite[S.~439]{kleppmann17}
 
   Betrachtet man exemplarisch die Analyse der Besucherzahlen einer Webseite, so
   lassen sich über Batch-Verarbeitung beispielsweise die Fragen beantworten „Wie
@@ -84,33 +87,27 @@
   Stream-Verarbeitung können diese Daten in Echzeit analysiert und die Ergebnisse
   betrachtet werden.
 
-  Weitere Einsatzgebiete sind zum Beispiel:
+  Weitere Einsatzgebiete sind zum Beispiel:\cite[S.~465ff.]{kleppmann17}
   \begin{description}
-    \item[Analyse von Sensordaten] Dies kann zum Beispiel durch die Sensorik im
-      Auto illustriert werden: Die Werte verschiedener Sensoren zum Beispiel
-      Beschleunigungssensor, Geschwindigkeitssensor und Abstandssensor, werden in
-      Echtzeit zusammengeführt.
-    \item[IoT Devices] Mit der zunehmenden Verbreitung von IoT Devices nimmt auch
-      hier die eh schon sehr hohe Datenmenge zu: An eine zentrale Stelle werden
-      verschiedene Events von unterschiedlichen Geräten gemeldet, zum Beispiel
-      die Helligkeit des Raumes, ob sich eine Person in einem Raum befindet und
-      die aktuelle Raumtemperatur.
-    \item[Fraud Detection] In Echtzeit soll für Überweisungen geprüft werden, ob
-      diese vom eigentlichen Bankkunden ausgeführt wurde, oder ob ein Betrüger
-      diese im Namen des Kunden initiiert hat. Überweisungen, die der Kunde nicht
-      selbst (oder unbewusst) in Auftrag gegeben hat, sollen aufgehalten werden.
+    \item[Fraud Detection] Die Betrugsversuchserkennung versucht plötzliche
+      Abweichungen im Nutzungsverhalten einer Kreditkarte zu erkennen und die
+      Karte zu sperren, wenn der Verdacht besteht, dass diese gestohlen wurde.
+    \item[Fertigungssysteme] Der Zustand von Maschinen in Fabriken soll
+      überwacht werden, so dass im Falle eines Fehlverhaltens darauf reagiert
+      werden kann.
+    \item[High Speed Trading] Abhängig von Schwankungen der Aktien einer Börse
+      sollen anhand festgelegter Regeln passende Wertpapiere gekauft oder
+      verkauft werden, um den eigenen Gewinn zu maximieren.
+    \item[Militärische Überwachung] Die Bewegungen eines potentiellen
+      Angreifers werden überwacht, es wird auf auffällige Bewegungsmuster
+      reagiert.
     \item[Complex Event Processing] Beim Complex Event Processing wird in einem
       Datenstrom nach vorher festgelegten Mustern gesucht. Das bedeutet der
       Anwender legt Abfragen (ähnlich zu SQL) fest und der Stream wird
       kontinuierlich auf das Auftreten der definierten Muster geprüft.
-    \item[High Speed Trading] Abhängig von Schwankungen der Aktien einer Börse
-      sollen passende Wertpapiere gekauft oder verkauft werden, um den eigenen
-      Gewinn zu maximieren. Im Optimalfall finden die Aktionen schneller statt,
-      als die Konkurrenz diese ausführen kann.
-    \item[Klickstreamanalyse] Der Bewegungspfad des Besuchers einer Webseite wird
-      aufgezeichnet und analysiert. Abhängig vom Verhalten des Nutzers kann
-      dieser zum Beispiel klassifiziert werden und es wird passende Werbung
-      gezeigt.
+    \item[Streamanalyse] Die Streamanalyse beschäftigt sich nicht so sehr mit
+      besonderen Mustern in den Daten sondern mit analytischen Fragen, zum
+      Beispiel wie häufig ein bestimmtes Event aufgetreten ist.
   \end{description}
 
   Alle Einsatzgebiete haben gemeinsam, dass es sich um „Echtzeitsysteme“ handelt:
@@ -118,24 +115,28 @@
   werden. Oft ist es sogar so, dass die Qualität der Informationen, die aus den
   Daten gewonnen werden können, bei längerer Verarbeitungsdauer abnimmt.
 
-  Die vorliegende Arbeit gibt einen allgemeinen Einblick in die Verarbeitung von
-  Streams und zeigt im Anschluss detailliert die Möglichkeiten der Verarbeitung
-  von Streams mit dem Apache Storm Framework.
+  Die vorliegende Arbeit gibt einen allgemeinen Einblick in die Verarbeitung
+  von Streams und zeigt im Anschluss detailliert die Möglichkeiten der
+  Verarbeitung mit dem Apache Storm Framework. Dazu wird exemplarisch die
+  Implementierung einer Software zur Messung der Tippgeschwindigkeit gezeigt.
 
 % TODO Kapitelbeschreibung
 
   \section{Datenhaltung bei Big Data}
   Die Verarbeitung von den in der Einleitung beschriebenen Datenmengen bringt
-  eine Menge an Herausforderungen mit sich: Ein einzelner Rechner ist zu schwach,
-  um die Menge an Daten a) abzuspeichern und b) Berechnungen auf diesen Daten
-  auszuführen. Aus diesem Grund wird für die Verarbeitung von Big Data im
-  Normalfall \textit{horizontal} skaliert. Das bedeutet, dass die Verarbeitung
-  statt auf einem extrem performanten Rechner auf viele Rechner verteilt wird.
-  Hier kommt sogenannte \textit{Commodity Hardware} zum Einsatz: Handelsübliche
-  Rechner, die im Verbund agieren und auf die anfallende Arbeit aufgeteilt wird.
+  eine Menge an Herausforderungen mit sich: Ein einzelner Rechner ist zu
+  schwach, um die Menge an Daten a) abzuspeichern und b) Berechnungen in
+  vertretbarer Zeit auf diesen Daten auszuführen. Aus diesem Grund wird für die
+  Verarbeitung von Big Data im Normalfall \textit{horizontal} skaliert. Das
+  bedeutet, dass die Verarbeitung statt auf einem extrem performanten Rechner
+  auf viele „normale“ Rechner verteilt wird.  Hier kommt sogenannte
+  \textit{Commodity Hardware} zum Einsatz: Handelsübliche Rechner, die im
+  Verbund agieren und auf die anfallende Arbeit aufgeteilt
+  wird.\cite[S.~42]{white2010}
 
   Reduziert man Big Data auf die zu speichernde Datenmenge gibt es drei
-  Hauptgründe, die Last auf verschiedene Rechner zu verteilen:
+  Hauptgründe, die Last auf verschiedene Rechner zu
+  verteilen:\cite[S.~145]{kleppmann17}
 
   \begin{description}
     \item[Skalierbarkeit] Die Daten können aufgrund des Speicherplatzes, der
@@ -151,7 +152,8 @@
       zurücklegen und der Zugriff wird beschleunigt.
   \end{description}
 
-  Um Daten verteilt vorzuhalten, gibt es zwei Ansätze:
+  Um Daten verteilt vorzuhalten, gibt es zwei
+  Ansätze:\cite[S.~147]{kleppmann17}
 
   \begin{description}
     \item[Replikation] Die gleichen Daten werden auf verschiedenen Knoten
@@ -167,7 +169,8 @@
   Das CAP-Theorem oder \textit{Brewer's Theorem} wurde öffentlich erstmalig im
   Jahr 2000 auf dem \textit{Symposium on Principles of Distributed Computing}
   vorgestellt und im Jahr 2002 formal bewiesen. Das Theorem besagt, dass ein
-  verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten kann:
+  verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten
+  kann:\cite[S.~51-59]{brewer02}
 
   \begin{description}
     \item[Konsistenz] Das Lesen eines Wertes liefert immer das Ergebnis des
@@ -179,23 +182,18 @@
       verlorenen oder verzögerten Netzwerkpakete.
   \end{description}
 
-  Zu beachten ist hier, dass nicht explizit zwei Garantien gewählt werden müssen
-  - gewählt werden muss zwischen Konsistenz und Verfügbarkeit, wenn tatsächlich
-  ein Netwerkfehler auftritt.
-
   Graphisch wird das CAP-Theorem häufig als Pyramide dargestellt:
 
 % TODO Graphik vom CAP-Theorem
 
   \section{Lambda Architektur}
-  Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How
-  to beat the CAP-Theorem“ vorgestellt und beruht auf der Beobachtung,
-  dass sich die Komplexität in verteilten Systemen aus dem
-  veränderlichen Zustand in Datenbanken („mutable state“) und der
-  Nutzung von inkrementellen Algorithmen zur Manipulation dieses
-  Zustands ergibt.  Der Name leitet sich aus dem Lambda-Kalkül als
-  Grundlage der funktionalen Programmierung ab: Berechnungen im
-  Batch-Layer werden nur auf unveränderlichen Daten ausgeführt.
+  Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat
+  the CAP-Theorem“\cite{marz2011} vorgestellt und beruht auf der Beobachtung,
+  dass sich die Komplexität in verteilten Systemen aus dem veränderlichen
+  Zustand in Datenbanken („mutable state“) und der Nutzung von inkrementellen
+  Algorithmen zur Manipulation dieses Zustands ergibt.  Der Name leitet sich
+  aus dem Lambda-Kalkül als Grundlage der funktionalen Programmierung ab:
+  Berechnungen im Batch-Layer werden nur auf unveränderlichen Daten ausgeführt.
 
   Der Autor wirft die Frage auf, wie ein System aussehen würde, dass als
   Kernkomponente eine Append-Only-Datenbank verwendet - das heißt der Zustand
@@ -293,15 +291,13 @@
   laufendes System und kann aus den ihm so zur Verfügung gestellten Informationen
   Handlungen ableiten.
 
-  Zusätzlich existiert noch das sogenannte \textit{Micro-Batching}.
-  Hier wird nicht jedes Event / jede Nachricht individuell betrachtet,
-  sondern es werden mehrere Nachrichten gesammelt, um dann
-  Berechnungen über diesen kleinen Datenbestand auszuführen. Die
-  aufprojezierte Zeispanne über welche die Daten zu einem Batch
-  zusammengefasst werden nennt sich \textit{Window}. Im folgenden sind
-  zwei bekannte Windowing-Verfahren theoretisch vorgestellt, das
-  ebenfalls vorgestellte Sliding-Window-Verfahren wird im Praxisteil
-  konkret eingesetzt.
+  Zusätzlich existiert noch das sogenannte \textit{Micro-Batching}.  Hier wird
+  nicht jedes Event / jede Nachricht individuell betrachtet, sondern es werden
+  mehrere Nachrichten gesammelt, um dann Berechnungen über diesen kleinen
+  Datenbestand auszuführen. Die Zeispanne über welche die Daten zu einem Batch
+  zusammengefasst werden nennt sich \textit{Window}.\cite[S.~452]{kleppmann17}
+  Im folgenden sind zwei bekannte Windowing-Verfahren vorgestellt, das
+  Sliding-Window-Verfahren wird im Praxisteil eingesetzt.
 
   \subsection{Tumbling Window}
   Ein \textit{Tumbling Window} ist eine Zeitreihe von
@@ -343,7 +339,8 @@
   Ein Sliding Window erzeugt nur ein Ergebnis, wenn in der
   betrachteten Zeit tatsächlich ein Ereignis aufgetreten ist. Die
   Ereignisse können zu mehr als einem Fenster gehören und das Fenster
-  wird kontinuierlich um ein bestimmten Wert nach vorne geschoben.
+  wird kontinuierlich um ein bestimmten Wert nach vorne
+  geschoben.\cite[S.~472]{kleppmann17}
   \begin{figure}[!h]
     \centering
     \begin{tikzpicture}
@@ -393,17 +390,17 @@
   der zugehörigen Website als skalierbar und fehlertolerant beworben.
   Zudem bietet es ein sogenanntes Guaranteed-Message-Processing, d.h.
   das Framework gewährleistet, dass Nachrichten auf jeden Fall
-  verarbeitet werden und nicht verloren gehen.
+  verarbeitet werden und nicht verloren gehen.\cite{apachestorm}
 
   \subsection{Storm Komponenten}
 
   Der Einsatz des Storm Frameworks setzt die Kenntnis einiger
   Begrifflichkeiten voraus. Diese werden im Folgenden kurz eingeführt
-  und erläutert.
+  und erläutert.\cite[S.~53ff.]{stormpresentation2011}
 
   \paragraph{Tuple}
   Ein Tuple bezeichnet im Kontext des Frameworks eine Nachricht, die
-  von diesem verarbeitet wird. Mathematisch ist ein Tupel allgemein
+  von diesem verarbeitet wird. Mathematisch ist ein Tupel allgemein wie folgt
   definiert:
   \begin{quote}
     Ein Tupel besteht aus einer Liste endlich vieler, nicht
@@ -468,15 +465,15 @@
   beschrieben.
 
   \begin{lstlisting}[caption={Methodensignatur einer Bolt-Implementierung}]
-void execute(Tuple input, BasicOutputCollector collector)
-{
-  /* do some magic stuff here, e.g:
-  * - count words
-  * - write to database
-  * - combine data
-  */
-  ...
-}
+  void execute(Tuple input, BasicOutputCollector collector)
+  {
+    /* do some magic stuff here, e.g:
+    * - count words
+    * - write to database
+    * - combine data
+    */
+    ...
+  }
   \end{lstlisting}
 
   In der \textit{execute}-Methode kann der Entwickler unabhängig vom
@@ -519,7 +516,7 @@ void execute(Tuple input, BasicOutputCollector collector)
   Tupel verarbeitet, sondern die jeweiligen Bolts erzeugen ein neues
   Tupel, welches auf dem Empfangenen basiert. Schlägt die Verarbeitung
   eines dieser Tupel fehl, so muss das Ursprungstupel noch einmal
-  gesendet werden.
+  gesendet werden.\cite{stormguaranteedprocessing}
 
   \paragraph{At-least-once-Semantik}
   Das im vorhergehenden Paragraphen beschriebene Vorgehen stellt
@@ -548,7 +545,7 @@ void execute(Tuple input, BasicOutputCollector collector)
   zusammengefasst. Die Reihenfolge der Verarbeitung der Micro-Batches
   ist strikt sortiert, das heißt es wird erst ein Batch fertig
   verarbeitet, bevor mit der Verarbeitung des folgenden Batches
-  angefangen wird.
+  angefangen wird.\cite{stormtrident}
 
   Trident bringt für die Verarbeitung der Streams vorgefertigte
   Operationen mit. Es können Merges und Joins, Aggregationen,
@@ -557,7 +554,8 @@ void execute(Tuple input, BasicOutputCollector collector)
 
   Die Exactly-Once-Verarbeitung kann durch den Spout konfiguriert
   werden. Erreicht wird dies durch das Mitführen von State, wenn Daten
-  aggregiert werden. Unterschieden wird zwischen den Folgenden:
+  aggregiert werden. Unterschieden wird zwischen den
+  Folgenden:\cite{stormtridentstate}
 
   \begin{description}
     \item[Transactional] In jedem erneut gesendeten Batch sind genau
@@ -673,7 +671,11 @@ void execute(Tuple input, BasicOutputCollector collector)
   }
   \end{lstlisting}
 
+  % TODO Zeitbetrachtung : Es wird die Serverzeit genutzt
+
   \section{Zusammenfassung / Fazit}
+  \bibliography{bib}
+  \bibliographystyle{alpha}
 
 
   \end{document}
