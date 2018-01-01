@@ -308,9 +308,8 @@
   Sliding-Window-Verfahren wird im Praxisteil der Arbeit eingesetzt.
 
   \subsection{Tumbling Window}
-  Ein \textit{Tumbling Window} ist eine Zeitreihe von
-  aufeinanderfolgenden und sich nicht überlappenden Intervallen fixer
-  Größe.
+  Ein \textit{Tumbling Window} ist eine Zeitreihe von aufeinanderfolgenden und
+  sich nicht überlappenden Intervallen fixer Größe.
   \begin{figure}[!h]
     \centering
     \begin{tikzpicture}
@@ -334,14 +333,13 @@
     \caption{Schematische Darstellung eines Tumbling Window}
   \end{figure}
 
-  Interpretiert man die im Schaubild dargestellten Intervalle als
-  Sekunden, so werden alle Ereignisse von Sekunde 0 bis Sekunde 2
-  zusammengefasst, und im Anschluss als Ergebnis geliefert. Im
-  Anschluss werden die Ereignisse von Sekunde 2 bis Sekunde 4
-  zusammengefasst usw. Das Ergebnis ist immer das des letzten
-  abgeschlossenen Intervalls. Jedes Ereignis wird nur einmal
-  betrachtet. Das bedeutet, dass jedes Ergebnis maximal 2 Sekunden
-  veraltet sein kann.
+  Interpretiert man die im Schaubild dargestellten Intervalle als Sekunden, so
+  werden alle Ereignisse von Sekunde 0 bis Sekunde 2 zusammengefasst, und im
+  Anschluss als Ergebnis geliefert. Im Anschluss werden die Ereignisse von
+  Sekunde 2 bis Sekunde 4 zusammengefasst usw. Das Ergebnis ist immer das des
+  letzten abgeschlossenen Intervalls. Jedes Ereignis wird nur einmal
+  betrachtet. Das bedeutet, dass jedes Ergebnis maximal 2 Sekunden veraltet
+  sein kann.
 
   \subsection{Sliding Window}
   Ein Sliding Window erzeugt im Gegensatz zum Tumbling Window nur ein Ergebnis,
@@ -623,12 +621,12 @@
   \footnotetext{Screenshot von \url{http://github.com/flopska/bigdatatools/}}
 
   Die Eingabe erfolgt über eine in HTML und JavaScript geschriebene
-  WebApp. Diese präsentiert dem Nutzer eine Liste von Wörtern und
-  darunter ein Eingabefeld in welches das aktuell hervorgehobene Wort
-  eingegeben werden soll. Schreibt der Nutzer das Wort richtig, so
-  färbt es sich grün. Bei einem Fehler wird das Wort rot dargestellt.
-  Das Betätigen der Leertaste bewegt die Hervorhebung zum nächsten
-  Wort und löscht den Inhalt des Eingabefeldes.
+  WebApp.\footnote{\url{https://github.com/FlopsKa/bigdatatools/tree/master/prototype/frontend}}
+  Diese präsentiert dem Nutzer eine Liste von Wörtern und darunter ein
+  Eingabefeld in welches das aktuell hervorgehobene Wort eingegeben werden
+  soll. Schreibt der Nutzer das Wort richtig, so färbt es sich grün. Bei einem
+  Fehler wird das Wort rot dargestellt.  Das Betätigen der Leertaste bewegt die
+  Hervorhebung zum nächsten Wort und löscht den Inhalt des Eingabefeldes.
 
   Jedes korrekt eingegebene Wort wird über einen Ajax-Aufruf an eine
   REST-Schnittstelle geschickt und dann serverseitig weiter
@@ -646,11 +644,12 @@
   weiter verarbeitet. Diese Architektur ist im obigen Schaubild
   schematisch dargestellt.
 
-  Die Schnittstelle wurde nichts selbst entwickelt, sondern hier kommt
-  die Schnittstelle aus der \textit{confluent}-Distribution zum
-  Einsatz.
-
-  % TODO Wieso confluent?
+  Die Schnittstelle wurde nichts selbst entwickelt, sondern hier kommt die
+  Schnittstelle aus der
+  \textit{confluent}-Distribution\footnote{\url{https://www.confluent.io/product/confluent-platform/}}
+  zum Einsatz. Für diesen Anwendungsfall wurde die confluent-Distribution
+  gewählt, da durch die enthaltene REST-Schnittstelle die Anbindung an die
+  WebApp sehr einfach umsetzbar ist.
 
   Da jede Nachricht nur ein einziges Mal verarbeitet werden soll, wird
   für die tatsächliche Verarbeitung Storm Trident eingesetzt. Für ein
@@ -679,7 +678,36 @@
   }
   \end{lstlisting}
 
-  % TODO Zeitbetrachtung : Es wird die Serverzeit genutzt
+  Das komplette Programm findet sich unter
+  \url{https://github.com/FlopsKa/bigdatatools/tree/master/prototype}. Im
+  Folgenden sind die Aufrufe in der oben gezeigten \textit{main}-Methode kurz
+  erläutert. 
+
+  \begin{description}
+    \item[Zeile 2-7] Hier findet das Setup zur Nutzung von Storm statt. Dazu
+      wird der genutzte Zookeeper-Server (\textit{localhost}) angegeben, sowie
+      die Kafka-Queue (\textit{words}) aus der gelesen werden soll. Zusätzlich
+      wird als ein \textit{Opaque-Transactional}-Spout instantiert, um
+      Nachrichten mit der Exactly-Once-Semantik verarbeiten zu können.
+    \item[Zeile 9-14] Zunächst wird hier das Sliding Window konfiguriert: Es
+      soll ein Zeitfenster von 10 Sekunden mit einem Update-Intervall von einer
+      Sekunde ausgewertet werden. 
+      
+      Im Anschluss wird die Verarbeitung definiert: Lies Nachrichten mit dem
+      vorher definierten Spout, zähle alle Nachrichten und gib das Ergebnis als
+      Debug-Information aus.
+    \item[Zeile 16-17] Als letzter Schritt wird die Topologie als „lokaler
+      Cluster“ gestartet. Dies ist ein spezieller Modus von Storm, um die
+      Entwicklung zu vereinfachen und die Ausführung außerhalb eines
+      tatsächlichen Clusters zu ermöglichen.
+  \end{description}
+
+  Das Ergebnis ist die sekündliche Ausgabe der Anzahl der in den letzten 10
+  Sekunden korrekt eingegebenen Wörter auf \textit{stdout}. Zu beachten ist
+  hier, dass für die Ermittlung des Zeitfensters die Serverzeit genutzt wird
+  und die Auswertung durch unterschiedliche Latenzen bei der Übermittlung an
+  die REST-Schnittstelle beeinflusst wird. Genau betrachtet wird also die
+  Anzahl der in den letzten 10 Sekunden eingegangenen Nachrichten ausgegeben.
 
   \section{Zusammenfassung / Fazit}
   \bibliography{bib}
