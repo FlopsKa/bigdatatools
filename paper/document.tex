@@ -84,7 +84,7 @@
   Analog betrachtet die Stream-Verarbeitung die Fragestellungen: Wie viele
   Besucher waren in der letzten Minute auf der Seite aktiv? Wie viele in den
   letzten 10 Sekunden? Sind aktuell Besucher auf der Seite? Über
-  Stream-Verarbeitung können diese Daten in Echzeit analysiert und die Ergebnisse
+  Stream-Verarbeitung können diese Daten in Echtzeit analysiert und die Ergebnisse
   betrachtet werden.
 
   Weitere Einsatzgebiete sind zum Beispiel:\cite[S.~465ff.]{kleppmann17}
@@ -153,7 +153,7 @@
       desto wahrscheinlicher ist es, dass einzelne Rechner oder einzelne
       Komponenten ausfallen.
     \item[Latenz] Sind die Daten auf einem Rechner, der sich geographisch nah am
-      Ort des Zugriffs befindet, so müssen Netwerkpakete eine geringere Strecke
+      Ort des Zugriffs befindet, so müssen Netzwerkpakete eine geringere Strecke
       zurücklegen und der Zugriff wird beschleunigt.
   \end{description}
 
@@ -171,7 +171,7 @@
   Die beiden Ansätze werden in der Praxis häufig kombiniert eingesetzt.
 
   \section{Das CAP-Theorem}
-  Das CAP-Theorem oder \textit{Brewer's Theorem} wurde öffentlich erstmalig im
+  Das CAP-Theorem oder \textit{Brewer's Theorem} wurde öffentlich erstmals im
   Jahr 2000 auf dem \textit{Symposium on Principles of Distributed Computing}
   vorgestellt und im Jahr 2002 formal bewiesen. Das Theorem besagt, dass ein
   verteiltes System nicht mehr als zwei der folgenden drei Garantien bieten
@@ -187,7 +187,7 @@
       verlorenen oder verzögerten Netzwerkpakete.
   \end{description}
 
-  Graphisch wird das CAP-Theorem häufig als Dreieckt dargestellt, eine konkrete
+  Graphisch wird das CAP-Theorem häufig als Dreieck dargestellt, eine konkrete
   Anwendung liegt dabei auf einer der Kanten:
 
   \begin{figure}[!h]
@@ -223,7 +223,7 @@
   die Daten.
 
   Dieses Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
-  verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
+  verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- beziehungsweise.
   Realtime Layer und füllt so die entstehende Lücke auf. Kombiniert werden
   die beiden Sichten auf die Daten mit Hilfe des \textit{Serving Layer}.
 
@@ -240,9 +240,9 @@
   werden.  Das heißt der Batch Job läuft, führt seine Berechnungen aus und
   schreibt das Ergebnis in eine Datenbank. Dabei werden schon in der Datenbank
   bestehende Daten vollständig ersetzt. Im Anschluss wird wieder eine
-  Neuberechnung angestartet, die die in der Zwischenzeit angefallenen Daten
-  mitbetrachtet. Ist diese abgeschlossen ersetzt das Ergebnis wieder das
-  vorherige usw.
+  Neuberechnung gestartet, die die in der Zwischenzeit angefallenen Daten
+  mit betrachtet. Ist diese abgeschlossen ersetzt das Ergebnis wieder das
+  vorherige  .
 
   \subsection{Speed / Realtime Layer}
   Der Speed-Layer füllt die Versorgungslücke, die entsteht, während die
@@ -259,7 +259,7 @@
   neuen Wertes schreibt.
 
   An dieser Stelle ist das System auch Fehlern des Entwicklers über toleranter -
-  es kann a) ein Fehler bei der Entwicklung der Verarabeitungslogik im
+  es kann a) ein Fehler bei der Entwicklung der Verarbeitungslogik im
   Batch-Layer entstehen, oder b) bei der Entwicklung des Speed-Layers.
 
   Tritt der Fehler im Batch-Layer auf, so zieht sich der Fehler durch das
@@ -313,7 +313,7 @@
   Sliding-Window-Verfahren wird im Praxisteil der Arbeit eingesetzt.
 
   \subsection{Tumbling Window}
-  Ein \textit{Tumbling Window} ist eine Zeitreihe von aufeinanderfolgenden und
+  Ein \textit{Tumbling Window} ist eine Zeitreihe von aufeinander folgenden und
   sich nicht überlappenden Intervallen fixer Größe.
   \begin{figure}[!h]
     \centering
@@ -341,7 +341,7 @@
   Interpretiert man die im Schaubild dargestellten Intervalle als Sekunden, so
   werden alle Ereignisse von Sekunde 0 bis Sekunde 2 zusammengefasst, und im
   Anschluss als Ergebnis geliefert. Im Anschluss werden die Ereignisse von
-  Sekunde 2 bis Sekunde 4 zusammengefasst usw. Das Ergebnis ist immer das des
+  Sekunde 2 bis Sekunde 4 zusammengefasst  . Das Ergebnis ist immer das des
   letzten abgeschlossenen Intervalls. Jedes Ereignis wird nur einmal
   betrachtet. Das bedeutet, dass jedes Ergebnis maximal 2 Sekunden veraltet
   sein kann.
@@ -394,7 +394,7 @@
   Apache Storm bezeichnet eine von der Apache Software Foundation
   bereitgestellte kostenlose Open-Source Software. Dieses Framework
   erlaubt die Echtzeitverarbeitung von unbegrenzten Datenströmen und
-  erreicht dabei einen Durchsatz von bis zu einer Million Tuple pro
+  erreicht dabei einen Durchsatz von bis zu einer Million Tupel pro
   Sekunde pro Knoten des verteilten Systems. Das Framework wird auf
   der zugehörigen Website als skalierbar und fehlertolerant beworben.
   Zudem bietet es ein sogenanntes Guaranteed-Message-Processing, d.h.
@@ -424,7 +424,7 @@
 
   \paragraph{Stream}
   Ein Stream fasst mehrere Tupel zu einem Datenstrom zusammen. Storm
-  vearbeitet diese Streams.
+  verarbeitet diese Streams.
   \begin{quote}
     [\ldots] einen kontinuierlichen Fluss von Datensätzen, dessen Ende
     meist nicht im Voraus abzusehen ist; die Datensätze werden
@@ -463,7 +463,7 @@
   % TODO Wie funktioniert das GMP?
 
   \paragraph{Bolt}
-  Die eigentliche Verabeitungslogik für die Streamverarbeitung mit
+  Die eigentliche Verarbeitungslogik für die Streamverarbeitung mit
   Storm wird in sogenannten Bolts realisiert. Der Bolt hat dazu eine
   \textit{execute(\ldots)}-Methode, diese wird vom Framework für jedes
   Tupel einzeln aufgerufen. Das Framework setzt die beiden Parameter
@@ -489,13 +489,13 @@
   Framework die Anwendungslogik realisieren. Hier ist zu beachten,
   dass der die Bolt-Klasse vor der Nutzung serialisiert und auf die
   Knoten des verteilten Systems transferiert wird: Es ist daher nicht
-  möglich im Konstrukter nicht serialisierbare Objekte zu instantieren.
-  Werden solche benötigt, so muss die Instantierung in der
+  möglich im Konstruktor nicht serialisierbare Objekte zu instantiieren.
+  Werden solche benötigt, so muss die Instantiierung in der
   \textit{prepare(\ldots)}-Methode erfolgen. Diese wird auch vom
   Framework aufgerufen.
 
   \paragraph{Topologie}
-  Die \textit{Topologie} bezeichnet den Zusammenschluss verschieder
+  Die \textit{Topologie} bezeichnet den Zusammenschluss verschiedener
   Spouts und Bolts in ein Gesamtkonstrukt von welchem die Streams
   verarbeitet werden. Spouts können dabei ihre Nachrichten an ein oder
   mehrere Bolts senden und diese können äquivalent neue Nachrichten
@@ -577,7 +577,7 @@
       zusätzlich die ID des Batches gespeichert, der diese Änderung
       ausgelöst hat. Da die Batches sortiert sind (die ID steigt immer
       an) lässt sich so vor der Änderung eines Wertes feststellen, ob
-      dieser bereits für den akutellen Batch angepasst wurde oder ob
+      dieser bereits für den aktuellen Batch angepasst wurde oder ob
       der Batch neuer ist.
     \item[Opaque Transactional]
       Dieser Spout gewährleistet, dass jedes Tupel in genau einem
@@ -596,7 +596,7 @@
       Diese Art von Spout trifft keine Aussagen über die Inhalte eines
       Batches. Das bedeutet es kann sowohl eine At-Most-Once-Semantik
       (Fehler werden ignoriert, Tupel gehen verloren) als aus
-      At-Least-Once-Sematik erreicht werden. Eine
+      At-Least-Once-Semantik erreicht werden. Eine
       Exactly-Once-Verarbeitung ist nicht möglich.
   \end{description}
 
@@ -631,7 +631,7 @@
   Eingabefeld in welches das aktuell hervorgehobene Wort eingegeben werden
   soll. Schreibt der Nutzer das Wort richtig, so färbt es sich grün. Bei einem
   Fehler wird das Wort rot dargestellt.  Das Betätigen der Leertaste bewegt die
-  Hervorhebung zum nächsten Wort und löscht den Inhalt des Eingabefeldes.
+  Hervorhebung zum nächsten Wort und löscht den Inhalt des Eingabefelds.
 
   Jedes korrekt eingegebene Wort wird über einen Ajax-Aufruf an eine
   REST-Schnittstelle geschickt und dann serverseitig weiter
@@ -692,7 +692,7 @@
     \item[Zeile 2-7] Hier findet das Setup zur Nutzung von Storm statt. Dazu
       wird der genutzte Zookeeper-Server (\textit{localhost}) angegeben, sowie
       die Kafka-Queue (\textit{words}) aus der gelesen werden soll. Zusätzlich
-      wird als ein \textit{Opaque-Transactional}-Spout instantiert, um
+      wird als ein \textit{Opaque-Transactional}-Spout instantiiert, um
       Nachrichten mit der Exactly-Once-Semantik verarbeiten zu können.
     \item[Zeile 9-14] Zunächst wird hier das Sliding Window konfiguriert: Es
       soll ein Zeitfenster von 10 Sekunden mit einem Update-Intervall von einer
