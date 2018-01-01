@@ -212,16 +212,15 @@
   auf sämtlichen vorhandenen Daten ausgeführt und die Nutzung von inkrementellen
   Algorithmen entfällt.
 
-  $\text{Query} = \text{Function(All Data)}$
+  Die gewünschte Abfrage wird als Batch-Job ausgeführt und das Ergebnis wird
+  abgespeichert. Eine Berechnung auf sämtlichen vorhandenen Daten kann sehr
+  lange dauern, dass heißt es gibt bei diesem Vorgehen eine aktuelle Sicht auf
+  die Daten.
 
-  Die Abfrage wird als Batch-Verarbeitung ausgeführt und das Ergebnis
-  abgespeichert. Eine Berechnung auf sämtlichen vorhandenen Daten kann sehr lange
-  dauern, dass heißt es gibt keine aktuelle Sicht auf die Daten.
-
-  Das Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
+  Dieses Problem wird dadurch gelöst, dass historische Daten über einen Batch-Job
   verarbeitet werden. Neu anfallende Daten verarbeitet der sogenannte Speed- bzw.
-  Realtime Layer und dieser füllt so die entstehende Lücke auf. Kombiniert werden
-  die beiden Sichten auf die Daten vom \textit{Serving Layer}.
+  Realtime Layer und füllt so die entstehende Lücke auf. Kombiniert werden
+  die beiden Sichten auf die Daten mit Hilfe des \textit{Serving Layer}.
 
   \begin{figure}[h]
     \center
@@ -231,17 +230,18 @@
   \end{figure}
 
   \subsection{Batch Layer}
-  Der Batch-Layer geht davon aus, dass es ok ist, wenn es keine aktuelle Sicht
-  auf die Daten gibt und die Berechnungen dadurch entsprechend einfach werden.
-  Das heißt der Batch Job läuft, führt seine Berechnungen aus und schreibt das
-  Ergebnis in eine Datenbank. Dabei werden schon in der Datenbank bestehende
-  Daten vollständig ersetzt. Im Anschluss wird die Neuberechnung angestartet, die
-  die in der Zwischenzeit angefallenen Daten mitbetrachtet. Ist diese
-  abgeschlossen ersetzt das Ergebnis wieder das vorherige usw.
+  Der Batch-Layer geht davon aus, dass es akzeptabel ist, wenn es keine
+  aktuelle Sicht auf die Daten gibt, da die Berechnungen dadurch einfache
+  werden.  Das heißt der Batch Job läuft, führt seine Berechnungen aus und
+  schreibt das Ergebnis in eine Datenbank. Dabei werden schon in der Datenbank
+  bestehende Daten vollständig ersetzt. Im Anschluss wird wieder eine
+  Neuberechnung angestartet, die die in der Zwischenzeit angefallenen Daten
+  mitbetrachtet. Ist diese abgeschlossen ersetzt das Ergebnis wieder das
+  vorherige usw.
 
   \subsection{Speed / Realtime Layer}
   Der Speed-Layer füllt die Versorgungslücke, die entsteht, während die
-  Berechnungen des Batch-Layers laufen. Das bedeutet der veränderbare Zusatand,
+  Berechnungen des Batch-Layers laufen. Das bedeutet der veränderbare Zustand,
   der aus der Batch-Verarbeitung heraus gehalten wurde und die damit
   einhergehenden inkrementellen Algorithmen befinden sich jetzt im Speed-Layer
   und führen hier die Berechnungen in Echtzeit aus.
@@ -255,15 +255,16 @@
 
   An dieser Stelle ist das System auch Fehlern des Entwicklers über toleranter -
   es kann a) ein Fehler bei der Entwicklung der Verarabeitungslogik im
-  Batch-Layer programmiert werden, oder b) bei der Entwicklung des Speed-Layers.
+  Batch-Layer entstehen, oder b) bei der Entwicklung des Speed-Layers.
 
-  Tritt der Fehler im Batch-Layer auf, so zieht sich der Fehler durch das gesamt
-  System und verfälscht die Auswertungen. Da jede Neuberechnung allerdings auf
-  sämtlichen historischen Daten basiert (Append-only) kann der Fehler vom
-  Entwickler korrigiert werden und die Datenbasis ist nach der Ausbringung der
-  Fehlerkorrektur und der nächsten Neuberechnung wieder korrekt. Zukünftige
-  Berechnungen des Speed-Layers und Abfragen auf den Datenbestand nutzen die
-  korrigiert Version, das heißt es gibt nur temporär eine verfälschte Datenbasis.
+  Tritt der Fehler im Batch-Layer auf, so zieht sich der Fehler durch das
+  gesamte System und verfälscht die Auswertungen. Da jede Neuberechnung
+  allerdings auf sämtlichen historischen Daten basiert (Append-only) kann der
+  Fehler vom Entwickler korrigiert werden und die Datenbasis ist nach der
+  Ausbringung der Fehlerkorrektur und der nächsten Neuberechnung wieder
+  korrekt. Zukünftige Berechnungen des Speed-Layers und Abfragen auf den
+  Datenbestand nutzen die korrigierte Version, das heißt es gibt nur temporär
+  eine verfälschte Datenbasis.
 
   Beim Auftreten eines Fehlers im Speed-Layer, so ist wie oben bereits
   angesprochen, nicht die gesamte Datenbasis vom Fehler beeinflusst, sondern nur
@@ -272,18 +273,13 @@
   korrekt sind, sind somit die historischen Daten nicht vom Fehler beeinflusst.
 
   \subsection{Serving Layer}
-  Die eigentliche Komplexität der Lambda-Architektur verbirgt sich hinter dem
-  \textit{Serving Layer}. Dieser wird im ursprünglichen Artikel von Nathan Marz
-  nicht beschrieben und wurde erstmals XXXX genannt. 
 
-  Der Client des verteilten Systems soll im Optimalfall von der Aufteilung der
-  Berechnungen in den Batch-Layer und den Speed-Layer nichts mitbekommen. Das
-  heißt er muss eine übergreifende Sicht über beide zum Einsatz kommende
-  Datenbanken bekommen und Abfragen müssen die Daten aus beiden Datenbanken
-  zusammenfassen.
-
-  Die Aufgabe des Serving-Layers ist es, dem Client diese Sicht zur Verfügung zu
-  stellen und die Komplexität der Berechnungen im Hintergrund zu verbergen.
+  Die Aufgabe des Serving-Layers ist es, die Ergebnisse der Berechnungen des
+  Batch-Layers vorzuhalten. Diese Schicht ist im Normalfall eine Datenbank
+  gegen die der Client seine Anfragen richtet, um die Ergebnisse aus der
+  Batch-Schicht mit den Ergebnissen aus der Realtime-Schicht zu kombinieren.
+  Bei der Beendigung eines Batch-Jobs werden die Einträge in dieser Datenbank
+  mit den aktualisierten Werten ersetzt.
 
   \section{Verarbeitung von Streams}
   Das vorangegangene Kapitel zeigt, dass die Verarbeitung von Batch-Daten der
@@ -292,11 +288,12 @@
   ist die Größe der Daten bekannt, die Menge der Daten ist endlich und die
   Datenmenge kann „vollständig“ verarbeitet werden.
 
-  Die Streamverarbeitung betrachtet im Gegensatz dazu die Verarbeitung von Daten,
-  die erst während eines zeitlichen Verlaufs verfügbar werden. Statt die Daten,
-  wie beim klassischen Data-Warehouse, erst zu indizieren und danach Abfragen auf
-  den gespeicherten Daten auszuführen, werden die Daten im laufenden Betrieb mit
-  statistischen und mathematischen Methoden analysiert.
+  Die Streamverarbeitung betrachtet im Gegensatz dazu die Verarbeitung von
+  Daten, die erst während eines zeitlichen Verlaufs verfügbar werden. Statt die
+  Daten, wie beim klassischen Data-Warehouse, erst zu indizieren und danach
+  Abfragen auf den gespeicherten Daten auszuführen, werden die Daten, die
+  sogenannten \textit{Nachrichten} oder \textit{Events}, im laufenden Betrieb
+  mit statistischen und mathematischen Methoden analysiert.
 
   Der Betrachter der Ergebnisse erhält so in Echtzeit Rückmeldung über ein
   laufendes System und kann aus den ihm so zur Verfügung gestellten Informationen
@@ -304,11 +301,11 @@
 
   Zusätzlich existiert noch das sogenannte \textit{Micro-Batching}.  Hier wird
   nicht jedes Event / jede Nachricht individuell betrachtet, sondern es werden
-  mehrere Nachrichten gesammelt, um dann Berechnungen über diesen kleinen
-  Datenbestand auszuführen. Die Zeispanne über welche die Daten zu einem Batch
+  mehrere Nachrichten gesammelt, um dann Berechnungen über diesem kleinen
+  Datenbestand auszuführen. Die Zeitspanne über welche die Daten zu einem Batch
   zusammengefasst werden nennt sich \textit{Window}.\cite[S.~452]{kleppmann17}
   Im folgenden sind zwei bekannte Windowing-Verfahren vorgestellt, das
-  Sliding-Window-Verfahren wird im Praxisteil eingesetzt.
+  Sliding-Window-Verfahren wird im Praxisteil der Arbeit eingesetzt.
 
   \subsection{Tumbling Window}
   Ein \textit{Tumbling Window} ist eine Zeitreihe von
@@ -347,10 +344,10 @@
   veraltet sein kann.
 
   \subsection{Sliding Window}
-  Ein Sliding Window erzeugt nur ein Ergebnis, wenn in der
-  betrachteten Zeit tatsächlich ein Ereignis aufgetreten ist. Die
-  Ereignisse können zu mehr als einem Fenster gehören und das Fenster
-  wird kontinuierlich um ein bestimmten Wert nach vorne
+  Ein Sliding Window erzeugt im Gegensatz zum Tumbling Window nur ein Ergebnis,
+  wenn in der betrachteten Zeit tatsächlich ein Ereignis aufgetreten ist. Die
+  Ereignisse können zu mehr als einem Fenster gehören und das Fenster wird
+  kontinuierlich um ein bestimmtes Intervall nach vorne
   geschoben.\cite[S.~472]{kleppmann17}
   \begin{figure}[!h]
     \centering
@@ -380,8 +377,6 @@
   wird immer eine aktuelle Sicht auf das Ergebnis präsentiert. Auch
   hier muss festgelegt werden, wie häufig das Ergebnis aktualisiert
   werden soll - es gibt also auch eine geringe Latenz.
-
-% TODO Event / Nachricht definieren
 
 % TODO Wo kommen diese Informationen her? Message Broker: AMQP/JMS-Style Broker
 % vs. Log-Based-Message Broker
