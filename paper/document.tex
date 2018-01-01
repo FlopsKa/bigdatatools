@@ -132,7 +132,12 @@
   auf viele „normale“ Rechner verteilt wird.  Hier kommt sogenannte
   \textit{Commodity Hardware} zum Einsatz: Handelsübliche Rechner, die im
   Verbund agieren und auf die anfallende Arbeit aufgeteilt
-  wird.\cite[S.~42]{white2010}
+  wird.\cite[S.~42]{white2010} 
+
+  Apache Hadoop\footnote{\url{http://hadoop.apache.org/}} ist ein Framework,
+  welches eine verteilte Speicherschicht, HDFS, mit einer verteilten
+  Rechenschicht, MapReduce, kombiniert. Damit wird die Verarbeitung von Big
+  Data auf einem verteilten System ermöglicht.
 
   Reduziert man Big Data auf die zu speichernde Datenmenge gibt es drei
   Hauptgründe, die Last auf verschiedene Rechner zu
@@ -197,7 +202,7 @@
     \caption{Veranschaulichung des CAP-Theorems}
   \end{figure}
 
-  \section{Lambda Architektur}
+  \section{Lambda-Architektur}
   Die Lambda-Architektur wurde 2011 von Nathan Marz im Blogpost „How to beat
   the CAP-Theorem“\cite{marz2011} vorgestellt und beruht auf der Beobachtung,
   dass sich die Komplexität in verteilten Systemen aus dem veränderlichen
@@ -709,7 +714,36 @@
   die REST-Schnittstelle beeinflusst wird. Genau betrachtet wird also die
   Anzahl der in den letzten 10 Sekunden eingegangenen Nachrichten ausgegeben.
 
-  \section{Zusammenfassung / Fazit}
+  \section{Zusammenfassung}
+  Der Einsatz von verteilten Systemen zur Datenhaltung und -analyse von Big
+  Data ist noch immer aktuell. Hadoop hat sich als OpenSource-Lösung etabliert
+  und bietet dem Nutzer eine horizontale Skalierbarkeit unter Nutzung von
+  \textit{Commodity}-Hardware. HDFS ermöglicht das verteilte Speichern der
+  Datenbestände und mit MapReduce können verteilte Berechnungen auf diesen
+  ausgeführt werden.
+
+  Bei der Verarbeitung der Daten wird zwischen Batch- und Streamverarbeitung
+  unterschieden: Die Batch-Verarbeitung arbeitet auf einer festen Datenmenge,
+  bei der Stream-Verarbeitung werden die Daten erst während eines zeitlichen
+  Verlaufs, das heißt bei ihrem Auftreten, verfügbar. Mit der
+  Stream-Verarbeitung ist es somit möglich Analysen auf Datenströmen in
+  Echtzeit auszuführen - die für die Batch-Verarbeitung typische hohe Wartezeit
+  entfällt. Die Lambda-Architektur nach Nathan Marz ist ein Ansatz die Batch-
+  und Stream-Verarbeitung zu kombinieren und dabei gleichzeitig die Komplexität
+  der eingesetzten Algorithmen zu reduzieren. 
+
+  Das Apache Storm Framework ist eine ebenfalls von Nathan Marz entwickelte
+  kostenlose Softwarebibliothek, welche die Echtzeit-Verarbeitung von
+  Datenströmen ermöglicht. Im Rahmen der Arbeit wurde gezeigt, wie unter
+  Einsatz des Frameworks die Tippgeschwindigkeit eines Nutzers ermittelt werden
+  kann: Dazu präsentiert eine WebApp dem Nutzer eine Reihe von einzugebenden
+  Wörtern und übermittelt gleichzeitig jedes eingegebene Wort an einen Server.
+  Dort werden die empfangenen Wörter über ein Sliding Window von 10 Sekunden
+  gezählt und sekündlich ausgegeben. Die Anwendung wurde prototypisch umgesetzt
+  und der Quelltext findet sich
+  unter\footnote{\url{https://github.com/FlopsKa/bigdatatools/tree/master/prototype}}.
+
+  \newpage
   \bibliography{bib}
   \bibliographystyle{alpha}
 
