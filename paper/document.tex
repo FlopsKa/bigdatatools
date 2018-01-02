@@ -319,7 +319,7 @@
 
   \subsection{Tumbling Window}
   Ein \textit{Tumbling Window} bezeichnet die Betrachtung von aufeinander
-  folgenden, sich nicht überlappenden Intervalle fixer Größer aus einer
+  folgenden, sich nicht überlappenden Intervallen fixer Größe aus einer
   Zeitreihe.
   \begin{figure}[!h]
     \centering
@@ -536,7 +536,7 @@
   Das im vorhergehenden Paragraphen beschriebene Vorgehen stellt
   sicher, dass eine Nachricht mindestens einmal korrekt verarbeitet
   wird. Der Ausfall eines Knotens beziehungsweise ein technischer
-  Fehler kann dafür Sorgen, dass ein Tupel nicht vollständig
+  Fehler kann dafür sorgen, dass ein Tupel nicht vollständig
   verarbeitet wird und damit neu gesendet wird. Haben, basierend auf
   diesem Tupel, bereits Berechnungen stattgefunden, die an einer Stelle
   persistiert wurden, so wird nun unter Umständen das Ergebnis
@@ -653,10 +653,10 @@
   weiter verarbeitet. Diese Architektur ist im obigen Schaubild
   schematisch dargestellt.
 
-  Die Schnittstelle wurde nichts selbst entwickelt, sondern hier kommt die
+  Die Schnittstelle wurde nicht selbst entwickelt, sondern es wird die
   Schnittstelle aus der
   \textit{confluent}-Distribution\footnote{\url{https://www.confluent.io/product/confluent-platform/}}
-  zum Einsatz. Für diesen Anwendungsfall wurde die confluent-Distribution
+  eingesetzt. Für diesen Anwendungsfall wurde die confluent-Distribution
   gewählt, da durch die enthaltene REST-Schnittstelle die Anbindung an die
   WebApp sehr einfach umsetzbar ist.
 
@@ -716,6 +716,13 @@
   und die Auswertung durch unterschiedliche Latenzen bei der Übermittlung an
   die REST-Schnittstelle beeinflusst wird. Genau betrachtet wird also die
   Anzahl der in den letzten 10 Sekunden eingegangenen Nachrichten ausgegeben.
+
+  Ausblickend wäre es mit den vorgestellten Big Data Technologien möglich, die
+  Tippgeschwindigkeiten einer Vielzahl von Anwendern sowohl zu messen als auch
+  aufzuzeichnen. Mithilfe der gespeicherten Daten könnten so zum Beispiel
+  häufige Fehler analysiert und passende Übungen generiert werden. Gleichzeitig
+  könnte für jeden Nutzer individuell eine „historische“ Datenbasis aufgebaut
+  werden, welche die Entwicklung der Tippgeschwindigkeit nachvollziehbar macht.
 
   \section{Zusammenfassung}
   Der Einsatz von verteilten Systemen zur Datenhaltung und -analyse von Big
